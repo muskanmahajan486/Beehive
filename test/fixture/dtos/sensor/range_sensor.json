@@ -1,0 +1,1 @@
+{"classType":"RangeSensor","device":{"id":21,"model":"dev","name":"device1","vendor":"dev"},"id":0,"max":100,"min":1,"name":"rangesensor","sensorCommandRef":{"deviceCommand":{"id":102,"name":"command2","sectionId":null},"id":0},"type":"RANGE"}

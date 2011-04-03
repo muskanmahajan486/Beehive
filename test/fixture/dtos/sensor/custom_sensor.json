@@ -1,0 +1,1 @@
+{"classType":"CustomSensor","device":{"id":21,"model":"dev","name":"device1","vendor":"dev"},"id":0,"name":"customsensor","sensorCommandRef":{"deviceCommand":{"id":103,"name":"command3","sectionId":null},"id":0},"states":[{"id":0,"name":"state1","value":"on"},{"id":0,"name":"state2","value":"off"},{"id":0,"name":"state3","value":"status"}],"type":"CUSTOM"}

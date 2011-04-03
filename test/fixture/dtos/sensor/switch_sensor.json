@@ -1,0 +1,1 @@
+{"classType":"Sensor","device":{"id":21,"model":"dev","name":"device1","vendor":"dev"},"id":0,"name":"switchsensor","sensorCommandRef":{"deviceCommand":{"id":101,"name":"command1","sectionId":null},"id":0},"type":"SWITCH"}
