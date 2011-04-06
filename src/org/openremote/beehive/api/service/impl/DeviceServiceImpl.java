@@ -82,7 +82,10 @@ public class DeviceServiceImpl extends BaseAbstractService<Device> implements De
          device.setName(deviceDTO.getName());
          device.setVendor(deviceDTO.getVendor());
          device.setModel(deviceDTO.getModel());
-         genericDAO.delete(device.getDeviceAttrs());
+         List<DeviceAttr> oldDeviceAttrs = device.getDeviceAttrs();
+         if (oldDeviceAttrs != null && oldDeviceAttrs.size() > 0) {
+        	 genericDAO.delete(oldDeviceAttrs);
+         }
          
          List<DeviceAttrDTO> deviceAttrDTOs = deviceDTO.getDeviceAttrs();
          if (deviceAttrDTOs != null && deviceAttrDTOs.size() > 0) {
