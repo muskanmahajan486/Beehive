@@ -28,6 +28,7 @@
                 <value>org.openremote.beehive.domain.User</value>
                 <value>org.openremote.beehive.domain.Role</value>
                 <value>org.openremote.beehive.domain.Account</value>
+                <value>org.openremote.beehive.domain.ControllerCommand</value>
             </list>
         </property>
         <property name="mappingResources">

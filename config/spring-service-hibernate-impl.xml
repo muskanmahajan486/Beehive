@@ -74,5 +74,8 @@
 	<bean id="accountService" class="org.openremote.beehive.api.service.impl.AccountServiceImpl"
 		parent="abstractService">
 	</bean>
+	<bean id="controllerCommandService" class="org.openremote.beehive.api.service.impl.ControllerCommandServiceImpl"
+		parent="abstractService">
+	</bean>
 	<bean id="resourceService" class="org.openremote.beehive.api.service.impl.ResourceServiceImpl" parent="abstractService"/>
 </beans>

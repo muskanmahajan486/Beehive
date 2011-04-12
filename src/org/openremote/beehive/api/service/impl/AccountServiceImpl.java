@@ -88,6 +88,11 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
 
    @Override
    public boolean isHTTPBasicAuthorized(String credentials) {
+      return isHTTPBasicAuthorized(credentials, true);
+   }
+   
+   @Override
+   public boolean isHTTPBasicAuthorized(String credentials, boolean isPasswordEncoded) {
       if (credentials != null && credentials.startsWith(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX)) {
          credentials = credentials.replaceAll(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX, "");
          credentials = Base64.decode(credentials);
@@ -96,6 +101,9 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
             String username = arr[0];
             String password = arr[1];
             User user = loadByUsername(username);
+            if (!isPasswordEncoded) {
+               password = new Md5PasswordEncoder().encodePassword(password, username);
+            }
             if (user != null && user.getPassword().equals(password)) {
                return true;
             }
@@ -104,6 +112,19 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
 
       return false;
    }
-   
 
+   @Override
+   public User loadByHTTPBasicCredentials(String credentials) {
+      if (credentials.startsWith(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX)) {
+         credentials = credentials.replaceAll(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX, "");
+         credentials = Base64.decode(credentials);
+         String[] arr = credentials.split(":");
+         if (arr.length == 2) {
+            String username = arr[0];
+            return loadByUsername(username);
+         }
+         throw new IllegalArgumentException("Invalid format for HTTP Basic credentials: "+credentials);
+      }else
+         throw new IllegalArgumentException("Invalid HTTP Basic credentials: "+credentials);
+   }
 }

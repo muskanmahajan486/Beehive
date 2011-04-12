@@ -28,11 +28,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import org.openremote.beehive.Constant;
+import org.openremote.beehive.api.dto.DirectoryDTO;
 import org.openremote.beehive.api.service.ResourceService;
+import org.openremote.beehive.exception.FilePermissionException;
 import org.openremote.beehive.exception.InvalidPanelXMLException;
 import org.openremote.beehive.exception.NoSuchAccountException;
 import org.openremote.beehive.exception.NoSuchPanelException;
@@ -136,11 +140,12 @@ public class ResourceRESTService extends RESTBaseService{
       return resourceNotFoundResponse();
    }
    
-   @Path("resources/{file_name}")
+   // we match a regexp here in order to match even sub paths (ex: /resources/foo/bar/gee)
+   @Path("resources/{file_name:.*}")
    @GET
-   @Produces( { MediaType.APPLICATION_OCTET_STREAM })
+   @Produces( { MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
    public Response getResource(@PathParam("username") String username, @PathParam("file_name") String fileName,
-         @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) {
+         @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials, @Context Request request) {
 
       if (!authorize(username, credentials, false)) {
          return unAuthorizedResponse();
@@ -149,10 +154,20 @@ public class ResourceRESTService extends RESTBaseService{
       try {
          File file = getResourceService().getResource(username, fileName);
          if (file != null) {
+            if(file.isDirectory()){
+               // FIXME: we should check that the client accepts this MIME type, but it's broken in
+               // the ancient version of RESTEasy we're using (1.0): fixed in 1.1 (we're at 2.2 now)
+               // See https://issues.jboss.org/browse/RESTEASY-219
+               return buildResponse(new DirectoryDTO(file));
+            }
             return buildResponse(file);
          }
       } catch (FileNotFoundException e) {
          throw new WebApplicationException(e,Response.Status.NOT_FOUND);
+      } catch (FilePermissionException e) {
+         // this occurs when someone tries to read above the root via a relative URL
+         // ex: /resources/../../other-user/resources/secret
+         throw new WebApplicationException(e,Response.Status.FORBIDDEN);
       }
       
       return resourceNotFoundResponse();
@@ -192,8 +207,7 @@ public class ResourceRESTService extends RESTBaseService{
       }
       return Response.status(TIMEOUT_CODE).build();
    }
-   
-   
+
    /*
     * If the user was not validated, fail with a
     * 401 status code (UNAUTHORIZED) and
@@ -203,13 +217,6 @@ public class ResourceRESTService extends RESTBaseService{
     */
    protected boolean authorize(String username, String credentials) {
       return authorize(username, credentials, true);
-   }
-   
-   private boolean authorize(String username, String credentials, boolean isPasswordEncoded) {
-      if (!getAccountService().isHTTPBasicAuthorized(username, credentials, isPasswordEncoded)) {
-         return false;
-      }
-      return true;
    }
    
    protected ResourceService getResourceService() {

@@ -1,5 +1,5 @@
 /* OpenRemote, the Home of the Digital Home.
-* Copyright 2008-2010, OpenRemote Inc.
+* Copyright 2008-2011, OpenRemote Inc.
 *
 * See the contributors.txt file in the distribution for a
 * full listing of individual contributors.
@@ -19,33 +19,36 @@
 */
 package org.openremote.beehive.api.service;
 
-import org.openremote.beehive.domain.Account;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import org.openremote.beehive.api.dto.ControllerCommandDTO;
+import org.openremote.beehive.domain.ControllerCommand;
 import org.openremote.beehive.domain.User;
 
 /**
  * Account service.
  * 
- * @author Dan Cong
+ * @author Stef Epardaud
  *
  */
-public interface AccountService {
+public interface ControllerCommandService {
    
-   void save(Account a);
-   
-   User loadByUsername(String username);
-   
-   User loadByHTTPBasicCredentials(String credentials);
-   
-   boolean isHTTPBasicAuthorized(long accountId, String credentials);
-   
-   boolean isHTTPBasicAuthorized(long accountId, String credentials, boolean isPasswordEncoded);
-   
-   boolean isHTTPBasicAuthorized(String username, String credentials, boolean isPasswordEncoded);
+   void save(ControllerCommand controllerCommand);
 
-   boolean isHTTPBasicAuthorized(String credentials);
-   
-   boolean isHTTPBasicAuthorized(String credentials, boolean isPasswordEncoded);
-   
-   long queryAccountIdByUsername(String username);
+   void update(ControllerCommand controllerCommand);
+
+   List<ControllerCommandDTO> queryByUsername(String username);
+
+   void closeControllerCommand(ControllerCommand controllerCommand);
+
+   ControllerCommand findControllerCommandById(Long id);
+
+   ControllerCommand saveUploadLogsCommand(String username);
+
+   void saveUpdateControllerCommand(String username, File resource) throws IOException;
+
+   void saveLogs(ControllerCommand controllerCommand, User user, File resource) throws IOException;
 
 }
