@@ -36,6 +36,7 @@ import org.openremote.beehive.api.dto.UploadLogsControllerCommandDTO;
 import org.openremote.beehive.api.service.AccountService;
 import org.openremote.beehive.api.service.ControllerCommandService;
 import org.openremote.beehive.api.service.ResourceService;
+import org.openremote.beehive.api.service.SensorValueService;
 import org.openremote.beehive.domain.ControllerCommand;
 import org.openremote.beehive.domain.ControllerCommand.State;
 import org.openremote.beehive.domain.ControllerCommand.Type;
@@ -52,6 +53,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
 
    private AccountService accountService;
    private ResourceService resourceService;
+   private SensorValueService sensorValueService;
 
    @Override
    public void save(ControllerCommand c) {
@@ -126,6 +128,9 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
       logsFolder.mkdirs();
       // now unzip in there
       ZipUtil.unzip(resource, logsFolder.getAbsolutePath());
+      
+      // and now log any new sensor values
+      sensorValueService.updateSensorValues(user.getAccount(), logsFolder);
    }
 
    @Override
@@ -154,5 +159,8 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
       this.resourceService = resourceService;
    }
 
+   public void setSensorValueService(SensorValueService sensorValueService) {
+      this.sensorValueService = sensorValueService;
+   }
    
 }
