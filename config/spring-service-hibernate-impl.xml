@@ -77,5 +77,8 @@
 	<bean id="controllerCommandService" class="org.openremote.beehive.api.service.impl.ControllerCommandServiceImpl"
 		parent="abstractService">
 	</bean>
+	<bean id="sensorValueService" class="org.openremote.beehive.api.service.impl.SensorValueServiceImpl"
+		parent="abstractService">
+	</bean>
 	<bean id="resourceService" class="org.openremote.beehive.api.service.impl.ResourceServiceImpl" parent="abstractService"/>
 </beans>
