@@ -79,7 +79,12 @@ public class GraphRESTService extends RESTBaseService {
          @QueryParam("title") String title,
          @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) throws IOException {
       // check the credentials and load the user
-      User user = checkCredentials(username, credentials);
+      User user = null;
+      try {
+         user = checkCredentials(username, credentials);
+      } catch (WebApplicationException e) {
+         return unAuthorizedResponse();
+      }
       Account account = user.getAccount();
       
       // check required params
