@@ -10,7 +10,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.openremote.beehive.Configuration;
+import org.openremote.beehive.spring.SpringContext;
 
 public class ProxyServer extends Thread {
 
@@ -18,7 +21,23 @@ public class ProxyServer extends Thread {
    private Selector selector;
    private boolean halted = false;
    private Set<ProxyClient> clients = new HashSet<ProxyClient>();
+   private String hostName;
+   private int timeout;
+   private int port;
 
+   public ProxyServer(){
+      Configuration configuration = (Configuration) SpringContext.getInstance().getBean("configuration");
+      hostName = configuration.getProxyHostName();
+      if(StringUtils.isEmpty(hostName))
+         hostName = "localhost";
+      timeout = configuration.getProxyTimeout();
+      if(timeout == 0)
+         timeout = 5000;
+      port = configuration.getProxyPort();
+      if(port == 0)
+         port = 10000;
+   }
+   
    @Override
    public void run() {
       logger.info("Proxy server starting up");
@@ -26,8 +45,8 @@ public class ProxyServer extends Thread {
       try {
          server = ServerSocketChannel.open();
          server.configureBlocking(false);
-         logger.info("Binding socket 10000");
-         server.socket().bind(new InetSocketAddress(10000));
+         logger.info("Binding socket "+port);
+         server.socket().bind(new InetSocketAddress(port));
          selector = Selector.open();
          server.register(selector, SelectionKey.OP_ACCEPT);
          // we must check before we select because we can have been halted before we created the selector
@@ -87,7 +106,7 @@ public class ProxyServer extends Thread {
          return;
       try{
          logger.info("Got a client socket");
-         ProxyClient client = new ProxyClient(this, clientSocket);
+         ProxyClient client = new ProxyClient(this, clientSocket, timeout, hostName);
          clients.add(client);
          logger.info("Starting client");
          client.start();

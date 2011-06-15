@@ -11,17 +11,18 @@ import org.apache.log4j.Logger;
 
 public abstract class Proxy extends Thread {
 
-   protected static final long CONNECTION_TIMEOUT = 5000;
    private static Logger logger = Logger.getLogger(Proxy.class);
    protected SocketChannel srcSocket;
    protected boolean halted;
    protected Selector selector;
    protected ByteBuffer srcBuffer;
+   protected int timeout;
 
-   public Proxy(SocketChannel clientSocket) throws IOException {
+   public Proxy(SocketChannel clientSocket, int timeout) throws IOException {
       this.srcSocket = clientSocket;
       srcSocket.configureBlocking(false);
       selector = Selector.open();
+      this.timeout = timeout;
       // this one comes from src and goes to dst
       srcBuffer = ByteBuffer.allocate(4096);
    }
@@ -58,7 +59,7 @@ public abstract class Proxy extends Thread {
             // and loop until we're done
             while(hasValidKeys(selector)){
                logger.info("Selecting");
-               if(selector.select(CONNECTION_TIMEOUT) == 0){
+               if(selector.select(timeout) == 0){
                   logger.info("Timed out or halted");
                   break;
                }

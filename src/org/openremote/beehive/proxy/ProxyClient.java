@@ -2,6 +2,7 @@ package org.openremote.beehive.proxy;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
@@ -19,14 +20,15 @@ import org.openremote.beehive.spring.SpringContext;
 
 public class ProxyClient extends Proxy {
 
-   private static final long CONTROLLER_TIMEOUT = 0;
    private static Logger logger = Logger.getLogger(ProxyClient.class);
    private ProxyServer server;
+   private String hostName;
 
-   public ProxyClient(ProxyServer server, SocketChannel clientSocket)
+   public ProxyClient(ProxyServer server, SocketChannel clientSocket, int timeout, String hostName)
    throws IOException {
-      super(clientSocket);
+      super(clientSocket, timeout);
       this.server = server;
+      this.hostName = hostName;
    }
 
    protected void onProxyExit() {
@@ -40,7 +42,7 @@ public class ProxyClient extends Proxy {
       try{
          serverSocket.configureBlocking(false);
          logger.info("Binding socket for client");
-         serverSocket.socket().bind(null);
+         serverSocket.socket().bind(new InetSocketAddress(0));
          int port = serverSocket.socket().getLocalPort();
          logger.info("Socket bound to port "+port);
 
@@ -50,7 +52,7 @@ public class ProxyClient extends Proxy {
             // we start with accepting the request
             SelectionKey serverKey = serverSocket.register(selector, SelectionKey.OP_ACCEPT);
             // now wait for the client to connect
-            while(selector.select(CONTROLLER_TIMEOUT) > 0){
+            while(selector.select(timeout) > 0){
                logger.info("Out of select");
                if(halted){
                   break;
@@ -97,7 +99,7 @@ public class ProxyClient extends Proxy {
          ByteBuffer buffer = ByteBuffer.allocate(token.length);
          clientSocket.configureBlocking(false);
          SelectionKey clientKey = clientSocket.register(selector, SelectionKey.OP_READ);
-         while(selector.select(CONTROLLER_TIMEOUT) > 0){
+         while(selector.select(timeout) > 0){
             logger.info("Out of select");
             if(halted){
                break;
@@ -135,7 +137,7 @@ public class ProxyClient extends Proxy {
       SelectionKey key = srcSocket.register(selector, SelectionKey.OP_READ);
       try{
          logger.info("Selecting for headers");
-         while(selector.select(CONNECTION_TIMEOUT) > 0){
+         while(selector.select(timeout) > 0){
             logger.info("out of select");
             if(halted)
                break;
@@ -194,7 +196,7 @@ public class ProxyClient extends Proxy {
       // now send it
       SelectionKey key = srcSocket.register(selector, SelectionKey.OP_WRITE);
       logger.info("Selecting for sending error "+response);
-      while(selector.select(CONNECTION_TIMEOUT) > 0){
+      while(selector.select(timeout) > 0){
          logger.info("Out of select");
          if(halted)
             break;
@@ -269,7 +271,7 @@ public class ProxyClient extends Proxy {
 
    private InitiateProxyControllerCommand contactController(User user, int port) {
       ControllerCommandService controllerCommandService = getControllerCommandService();
-      return controllerCommandService.saveProxyControllerCommand(user, "http://localhost:"+port);
+      return controllerCommandService.saveProxyControllerCommand(user, "http://"+hostName+":"+port);
    }
 
 }

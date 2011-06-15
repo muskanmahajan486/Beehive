@@ -31,6 +31,12 @@ public class Configuration {
 
    private String lircCrawRegex;
    
+   private String proxyHostName;
+   
+   private int proxyPort;
+
+   private int proxyTimeout;
+
    public String getWorkDir() {
       return workDir;
    }
@@ -78,6 +84,30 @@ public class Configuration {
 
    public String getTemplateResourcesDir() {
       return workDir + File.separator + "templates";
+   }
+
+   public String getProxyHostName() {
+      return proxyHostName;
+   }
+
+   public void setProxyHostName(String proxyHostName) {
+      this.proxyHostName = proxyHostName;
+   }
+
+   public int getProxyPort() {
+      return proxyPort;
+   }
+
+   public void setProxyPort(int proxyPort) {
+      this.proxyPort = proxyPort;
+   }
+
+   public int getProxyTimeout() {
+      return proxyTimeout;
+   }
+
+   public void setProxyTimeout(int proxyTimeout) {
+      this.proxyTimeout = proxyTimeout;
    }
 
    
