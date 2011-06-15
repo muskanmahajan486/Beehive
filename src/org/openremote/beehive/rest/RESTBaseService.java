@@ -32,6 +32,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.openremote.beehive.api.service.AccountService;
+import org.openremote.beehive.domain.User;
 import org.openremote.beehive.spring.ISpringContext;
 import org.openremote.beehive.spring.SpringContext;
 
@@ -135,17 +136,25 @@ public class RESTBaseService {
    }
 
    protected boolean authorize(String credentials) {
-      if (!getAccountService().isHTTPBasicAuthorized(credentials)) {
-         return false;
-      }
-      return true;
+      return getAccountService().loadByHTTPBasicCredentials(credentials) != null;
    }
 
-   protected boolean authorize(String credentials, boolean isPasswordEncoded) {
-      if (!getAccountService().isHTTPBasicAuthorized(credentials, isPasswordEncoded)) {
-         return false;
+   protected User checkCredentials(String username, String credentials) {
+      // this returns non-null or throws
+      User user = checkCredentials(credentials);
+      // check that the username matches
+      if (!username.equals(user.getUsername())) {
+         throw new WebApplicationException(unAuthorizedResponse());
       }
-      return true;
+      return user;
+   }
+   
+   protected User checkCredentials(String credentials) {
+      User user = getAccountService().loadByHTTPBasicCredentials(credentials);
+      if (user == null) {
+         throw new WebApplicationException(unAuthorizedResponse());
+      }
+      return user;
    }
 
    protected AccountService getAccountService() {

@@ -200,20 +200,6 @@ public class ControllerCommandRESTService extends RESTBaseService {
 
    // Internal kitchen
 
-   private User checkCredentials(String username, String credentials) {
-      if (!authorize(username, credentials, false)) {
-         throw new WebApplicationException(HttpURLConnection.HTTP_UNAUTHORIZED);
-      }
-      return getAccountService().loadByUsername(username);
-   }
-   
-   private User checkCredentials(String credentials) {
-      if (!authorize(credentials, false)) {
-         throw new WebApplicationException(HttpURLConnection.HTTP_UNAUTHORIZED);
-      }
-      return getAccountService().loadByHTTPBasicCredentials(credentials);
-   }
-   
    private void checkPermissions(User user, ControllerCommand controllerCommand) {
       if(controllerCommand.getAccount().getOid() != user.getAccount().getOid()){
          throw new WebApplicationException(HttpURLConnection.HTTP_FORBIDDEN);

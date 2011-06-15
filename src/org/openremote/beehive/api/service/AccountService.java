@@ -42,10 +42,6 @@ public interface AccountService {
    
    boolean isHTTPBasicAuthorized(String username, String credentials, boolean isPasswordEncoded);
 
-   boolean isHTTPBasicAuthorized(String credentials);
-   
-   boolean isHTTPBasicAuthorized(String credentials, boolean isPasswordEncoded);
-   
    long queryAccountIdByUsername(String username);
 
 }

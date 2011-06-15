@@ -221,13 +221,6 @@ public class GraphRESTService extends RESTBaseService {
       return ChartUtilities.encodeAsPNG(image, true, 0);
    }
 
-   private User checkCredentials(String username, String credentials) {
-      if (!authorize(username, credentials, false)) {
-         throw new WebApplicationException(HttpURLConnection.HTTP_UNAUTHORIZED);
-      }
-      return getAccountService().loadByUsername(username);
-   }
-   
    protected SensorValueService getSensorValueService() {
       return (SensorValueService) getSpringContextInstance().getBean("sensorValueService");
    }
