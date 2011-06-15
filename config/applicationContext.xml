@@ -29,6 +29,7 @@
                 <value>org.openremote.beehive.domain.Role</value>
                 <value>org.openremote.beehive.domain.Account</value>
                 <value>org.openremote.beehive.domain.ControllerCommand</value>
+                <value>org.openremote.beehive.domain.InitiateProxyControllerCommand</value>
                 <value>org.openremote.beehive.domain.SensorValue</value>
             </list>
         </property>
