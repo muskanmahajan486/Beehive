@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import org.jboss.resteasy.annotations.providers.jaxb.json.Mapped;
 import org.jboss.resteasy.annotations.providers.jaxb.json.XmlNsMap;
 import org.openremote.beehive.api.dto.ControllerCommandDTO;
+import org.openremote.beehive.api.dto.InitiateProxyControllerCommandDTO;
 import org.openremote.beehive.api.dto.UpdateControllerCommandDTO;
 import org.openremote.beehive.api.dto.UploadLogsControllerCommandDTO;
 
@@ -68,6 +69,7 @@ public class ControllerCommandListingJSON {
 	}
 	
 	@XmlElements({
+      @XmlElement(type = InitiateProxyControllerCommandDTO.class, name = "command"),
 		@XmlElement(type = UpdateControllerCommandDTO.class, name = "command"),
 		@XmlElement(type = UploadLogsControllerCommandDTO.class, name = "command"),
 		@XmlElement(type = ControllerCommandDTO.class, name = "command")
