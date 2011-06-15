@@ -24,6 +24,8 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -35,6 +37,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity 
 @Table(name="controller_command")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ControllerCommand extends BusinessEntity {
 
 	private Account account;
@@ -47,7 +50,7 @@ public class ControllerCommand extends BusinessEntity {
 	 * from which we can infer the type from.
 	 */
 	public enum Type {
-	   UPLOAD_LOGS, UPDATE_CONTROLLER;
+	   UPLOAD_LOGS, UPDATE_CONTROLLER, INITIATE_PROXY;
 
 	   /**
 	    * Gets a label for this type, this is useful for exporting. Label format is
