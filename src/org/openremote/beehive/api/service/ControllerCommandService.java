@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.openremote.beehive.api.dto.ControllerCommandDTO;
 import org.openremote.beehive.domain.ControllerCommand;
+import org.openremote.beehive.domain.InitiateProxyControllerCommand;
 import org.openremote.beehive.domain.User;
 
 /**
@@ -50,5 +51,7 @@ public interface ControllerCommandService {
    void saveUpdateControllerCommand(String username, File resource) throws IOException;
 
    void saveLogs(ControllerCommand controllerCommand, User user, File resource) throws IOException;
+
+   InitiateProxyControllerCommand saveProxyControllerCommand(User user, String url);
 
 }

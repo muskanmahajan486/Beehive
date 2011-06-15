@@ -31,6 +31,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.dto.ControllerCommandDTO;
+import org.openremote.beehive.api.dto.InitiateProxyControllerCommandDTO;
 import org.openremote.beehive.api.dto.UpdateControllerCommandDTO;
 import org.openremote.beehive.api.dto.UploadLogsControllerCommandDTO;
 import org.openremote.beehive.api.service.AccountService;
@@ -40,6 +41,7 @@ import org.openremote.beehive.api.service.SensorValueService;
 import org.openremote.beehive.domain.ControllerCommand;
 import org.openremote.beehive.domain.ControllerCommand.State;
 import org.openremote.beehive.domain.ControllerCommand.Type;
+import org.openremote.beehive.domain.InitiateProxyControllerCommand;
 import org.openremote.beehive.domain.User;
 import org.openremote.beehive.utils.ZipUtil;
 import org.springframework.beans.BeanUtils;
@@ -85,6 +87,9 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
 		   case UPLOAD_LOGS:
 		      commandDTO = new UploadLogsControllerCommandDTO();
 		      break;
+         case INITIATE_PROXY:
+            commandDTO = new InitiateProxyControllerCommandDTO();
+            break;
 		   default:
 		      commandDTO = new ControllerCommandDTO(command.getType());
 		      break;
@@ -100,6 +105,13 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
       User user = accountService.loadByUsername(username);
 
       ControllerCommand command = new ControllerCommand(user.getAccount(), Type.UPLOAD_LOGS);
+      save(command);
+      return command;
+   }
+
+   @Override
+   public InitiateProxyControllerCommand saveProxyControllerCommand(User user, String url) {
+      InitiateProxyControllerCommand command = new InitiateProxyControllerCommand(user.getAccount(), Type.INITIATE_PROXY, url);
       save(command);
       return command;
    }
@@ -162,5 +174,5 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    public void setSensorValueService(SensorValueService sensorValueService) {
       this.sensorValueService = sensorValueService;
    }
-   
+
 }
