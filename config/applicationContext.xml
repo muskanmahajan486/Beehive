@@ -45,6 +45,9 @@
 		<property name="workDir" value="${work.dir}" />
 		<property name="iconsDir" value="${icons.dir}" />
 		<property name="lircCrawRegex" value="${lirc.craw.regex}" />
+		<property name="proxyHostName" value="${proxy.host.name}" />
+		<property name="proxyPort" value="${proxy.port}" />
+		<property name="proxyTimeout" value="${proxy.timeout}" />
 	</bean>
 	
 
