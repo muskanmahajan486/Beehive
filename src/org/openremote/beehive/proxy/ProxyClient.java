@@ -229,7 +229,7 @@ public class ProxyClient extends Proxy {
             && bytes[i+1] == '\n'
                && bytes[i+2] == '\r'
                   && bytes[i+3] == '\n'){
-            headerEnd = i;
+            headerEnd = i+4;
             break;
          }
       }
