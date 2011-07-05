@@ -241,7 +241,7 @@ public class ProxyClient extends Proxy {
       Matcher matcher = pattern.matcher(headers);
       // nothing?
       if(!matcher.find()){
-         if(headerEnd < limit){
+         if(headerEnd <= limit){
             // we have seen every header, and found no good one, let's quit
             throw new HTTPException(HttpURLConnection.HTTP_UNAUTHORIZED);
          }
