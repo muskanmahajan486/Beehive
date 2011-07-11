@@ -23,12 +23,16 @@ public class ProxyClient extends Proxy {
    private static Logger logger = Logger.getLogger(ProxyClient.class);
    private ProxyServer server;
    private String hostName;
+   private int minClientPort;
+   private int maxClientPort;
 
-   public ProxyClient(ProxyServer server, SocketChannel clientSocket, int timeout, String hostName)
+   public ProxyClient(ProxyServer server, SocketChannel clientSocket, int timeout, String hostName, int minClientPort, int maxClientPort)
    throws IOException {
       super(clientSocket, timeout);
       this.server = server;
       this.hostName = hostName;
+      this.minClientPort = minClientPort;
+      this.maxClientPort = maxClientPort;
    }
 
    protected void onProxyExit() {
@@ -39,15 +43,30 @@ public class ProxyClient extends Proxy {
       // this either returns a good user, or throws
       User user = authenticateUser();
       ServerSocketChannel serverSocket = ServerSocketChannel.open();
+      int localPort;
       try{
          serverSocket.configureBlocking(false);
          logger.info("Binding socket for client");
-         serverSocket.socket().bind(new InetSocketAddress(0));
-         int port = serverSocket.socket().getLocalPort();
-         logger.info("Socket bound to port "+port);
+         for (localPort = minClientPort; localPort <= maxClientPort; localPort++)
+         {
+             try
+             {
+                 serverSocket.socket().bind(new InetSocketAddress(localPort));
+                 if (serverSocket.socket().getLocalPort() != -1) {
+                     break;
+                 }
+             }
+             catch (IOException ignoreAndContinue){}
+         }
+         
+         localPort = serverSocket.socket().getLocalPort();
+         if (localPort == -1) {
+             throw new IOException("Could not bind local socket between ports " + minClientPort + " and " + maxClientPort);
+         }
+         logger.info("Socket bound to port "+localPort);
 
          // now let's tell the client we want connection here
-         InitiateProxyControllerCommand controllerCommand = contactController(user, port);
+         InitiateProxyControllerCommand controllerCommand = contactController(user, localPort);
          try{
             // we start with accepting the request
             SelectionKey serverKey = serverSocket.register(selector, SelectionKey.OP_ACCEPT);

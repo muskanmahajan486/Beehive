@@ -48,6 +48,7 @@
 		<property name="proxyHostName" value="${proxy.host.name}" />
 		<property name="proxyPort" value="${proxy.port}" />
 		<property name="proxyTimeout" value="${proxy.timeout}" />
+		<property name="proxyClientPortRange" value="${proxy.clientPortRange}" />
 	</bean>
 	
 

@@ -24,18 +24,34 @@ public class ProxyServer extends Thread {
    private String hostName;
    private int timeout;
    private int port;
+   private int minClientPort;
+   private int maxClientPort;
 
    public ProxyServer(){
       Configuration configuration = (Configuration) SpringContext.getInstance().getBean("configuration");
       hostName = configuration.getProxyHostName();
-      if(StringUtils.isEmpty(hostName))
+      if(StringUtils.isEmpty(hostName)) {
          hostName = "localhost";
+      }
+      
       timeout = configuration.getProxyTimeout();
-      if(timeout == 0)
+      if(timeout == 0) {
          timeout = 5000;
+      }
+      
       port = configuration.getProxyPort();
-      if(port == 0)
+      if(port == 0) {
          port = 10000;
+      }
+      
+      String portRange = configuration.getProxyClientPortRange();
+      if(StringUtils.isEmpty(portRange)) {
+          minClientPort = 0;
+          maxClientPort = 0;
+      } else {
+          minClientPort = Integer.parseInt( portRange.trim().substring(0,portRange.indexOf("-")) );
+          maxClientPort = Integer.parseInt( portRange.trim().substring(portRange.indexOf("-")+1, portRange.length()) );
+      }
    }
    
    @Override
@@ -106,7 +122,7 @@ public class ProxyServer extends Thread {
          return;
       try{
          logger.info("Got a client socket");
-         ProxyClient client = new ProxyClient(this, clientSocket, timeout, hostName);
+         ProxyClient client = new ProxyClient(this, clientSocket, timeout, hostName, minClientPort, maxClientPort);
          clients.add(client);
          logger.info("Starting client");
          client.start();
