@@ -28,11 +28,13 @@ import org.openremote.beehive.api.dto.CodeDTO;
 import org.openremote.beehive.api.service.CodeService;
 import org.openremote.beehive.domain.Code;
 import org.openremote.beehive.domain.RemoteSection;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author allen.wei 2009-2-18
  */
 public class CodeServiceImpl extends BaseAbstractService<Code> implements CodeService {
+   @Transactional
    public List<CodeDTO> findByRemoteSectionId(long remoteSectionId) {
       List<CodeDTO> codeDTOs = new ArrayList<CodeDTO>();
       RemoteSection remoteSection = genericDAO.loadById(RemoteSection.class, remoteSectionId);

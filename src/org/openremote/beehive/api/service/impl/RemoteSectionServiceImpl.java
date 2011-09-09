@@ -32,6 +32,7 @@ import org.openremote.beehive.api.dto.RemoteSectionDTO;
 import org.openremote.beehive.api.service.RemoteSectionService;
 import org.openremote.beehive.domain.Model;
 import org.openremote.beehive.domain.RemoteSection;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * {@inheritDoc}
@@ -52,6 +53,7 @@ public class RemoteSectionServiceImpl extends BaseAbstractService<RemoteSection>
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public String exportText(long id) {
       return genericDAO.loadById(RemoteSection.class, id).allText();
    }
@@ -59,10 +61,12 @@ public class RemoteSectionServiceImpl extends BaseAbstractService<RemoteSection>
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public InputStream exportStream(long id) {
       return new ByteArrayInputStream(exportText(id).getBytes());
    }
 
+   @Transactional
    public List<RemoteSectionDTO> findByModelId(long modelId) {
       Model model = genericDAO.loadById(Model.class, modelId);
       List<RemoteSectionDTO> remoteSectionDTOs = new ArrayList<RemoteSectionDTO>();
@@ -82,6 +86,7 @@ public class RemoteSectionServiceImpl extends BaseAbstractService<RemoteSection>
       return remoteSectionDTOs;
    }
 
+   @Transactional
    public RemoteSectionDTO loadFisrtRemoteSectionByModelId(long modelId) {
       Model model = genericDAO.loadById(Model.class, modelId);
       RemoteSectionDTO remoteSectionDTO = new RemoteSectionDTO();
@@ -100,6 +105,7 @@ public class RemoteSectionServiceImpl extends BaseAbstractService<RemoteSection>
       throw new IllegalStateException("A Model should have one RemoteSection at least.");
    }
 
+   @Transactional
    public RemoteSectionDTO loadSectionById(long sectionId) {
       RemoteSectionDTO remoteSectionDTO = new RemoteSectionDTO();
       try {
@@ -114,6 +120,7 @@ public class RemoteSectionServiceImpl extends BaseAbstractService<RemoteSection>
       return remoteSectionDTO;
    }
 
+   @Transactional
    public ModelDTO loadModelById(long sectionId) {
       Model model = loadById(sectionId).getModel();
       ModelDTO modelDTO = new ModelDTO();

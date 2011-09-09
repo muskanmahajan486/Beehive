@@ -30,6 +30,7 @@ import org.openremote.beehive.api.service.IconService;
 import org.openremote.beehive.domain.Icon;
 import org.openremote.beehive.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Tomsky
@@ -48,6 +49,7 @@ public class IconServiceImpl extends BaseAbstractService<Icon> implements IconSe
     * 
     */
    @Override
+   @Transactional
    public List<IconDTO> findIconsByName(String name) {
       DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Icon.class);
       detachedCriteria.add(Restrictions.eq("name", name.toLowerCase()));

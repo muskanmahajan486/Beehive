@@ -25,6 +25,7 @@ import org.openremote.beehive.domain.Account;
 import org.openremote.beehive.domain.Code;
 import org.openremote.beehive.domain.User;
 import org.springframework.security.providers.encoding.Md5PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.syndication.io.impl.Base64;
 
@@ -36,6 +37,7 @@ import com.sun.syndication.io.impl.Base64;
 public class AccountServiceImpl extends BaseAbstractService<Code> implements AccountService {
 
    @Override
+   @Transactional
    public void save(Account a) {
       genericDAO.save(a);
    }

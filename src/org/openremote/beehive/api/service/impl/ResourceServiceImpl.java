@@ -56,6 +56,7 @@ import org.openremote.beehive.exception.PanelXMLNotFoundException;
 import org.openremote.beehive.utils.FileUtil;
 import org.openremote.beehive.utils.PathUtil;
 import org.openremote.beehive.utils.ZipUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -76,6 +77,7 @@ public class ResourceServiceImpl implements ResourceService {
    private static final String TABBAR_ELEMENT_NAME = "tabbar";
 
    @Override
+   @Transactional
    public boolean saveResource(long accountOid, InputStream input) {
       logger.debug("save resource from modeler to beehive");
 

@@ -28,11 +28,13 @@ import org.openremote.beehive.api.dto.RemoteOptionDTO;
 import org.openremote.beehive.api.service.RemoteOptionService;
 import org.openremote.beehive.domain.RemoteOption;
 import org.openremote.beehive.domain.RemoteSection;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author allen.wei 2009-2-18
  */
 public class RemoteOptionServiceImpl extends BaseAbstractService<RemoteOption> implements RemoteOptionService {
+  @Transactional
    public List<RemoteOptionDTO> findByRemoteSectionId(long remoteSectionId) {
       RemoteSection remoteSection = genericDAO.loadById(RemoteSection.class, remoteSectionId);
       List<RemoteOptionDTO> remoteOptionDTOs = new ArrayList<RemoteOptionDTO>();

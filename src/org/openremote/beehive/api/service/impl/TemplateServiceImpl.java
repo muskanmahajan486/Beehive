@@ -39,6 +39,7 @@ import org.openremote.beehive.api.service.TemplateService;
 import org.openremote.beehive.domain.Account;
 import org.openremote.beehive.domain.Template;
 import org.openremote.beehive.utils.FileUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public class TemplateServiceImpl extends BaseAbstractService<Template> implements TemplateService {
@@ -47,15 +48,18 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    protected Configuration configuration = null;
 
    @Override
+   @Transactional
    public List<TemplateDTO> loadAllPrivateTemplatesByAccountOid(long accountOid) {
       return loadAllTemplatesByAccountOidAndSharedType(accountOid,false);
    }
 
    @Override
+   @Transactional
    public List<TemplateDTO> loadAllPublicTemplatesByAccountOid(long accountOid) {
       return loadAllTemplatesByAccountOidAndSharedType(accountOid,true);
    }
 
+   @Transactional
    public List<TemplateDTO> loadPublicTemplatesByKeywordsAndPage(String keywords, int page) {
       List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
       DetachedCriteria critera = DetachedCriteria.forClass(Template.class);
@@ -77,6 +81,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public TemplateDTO loadTemplateByOid(long templateOid) {
       Template template = genericDAO.getById(Template.class, templateOid);
       if (template == null) {
@@ -86,6 +91,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public long save(Template t) {
       long templateOid = (Long) genericDAO.save(t);
       createTemplateFolder(templateOid);
@@ -93,6 +99,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public boolean delete(long templateOid) {
       Template t = genericDAO.getById(Template.class, templateOid);
       if (t != null) {
@@ -119,6 +126,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
       return null;
    }
 
+   @Transactional
    private List<TemplateDTO> loadAllTemplatesByAccountOidAndSharedType(long accountOid,boolean shared) {
       List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
       Account account = genericDAO.getById(Account.class, accountOid);
@@ -178,6 +186,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public TemplateDTO updateTemplate(Template t) {
       try {
          Template oldTemplate = genericDAO.loadById(Template.class, t.getOid());

@@ -38,6 +38,7 @@ import org.hibernate.type.Type;
 import org.openremote.beehive.api.service.SensorValueService;
 import org.openremote.beehive.domain.Account;
 import org.openremote.beehive.domain.SensorValue;
+import org.springframework.transaction.annotation.Transactional;
 
 public class SensorValueServiceImpl extends BaseAbstractService<SensorValue> implements SensorValueService{
 
@@ -45,6 +46,7 @@ public class SensorValueServiceImpl extends BaseAbstractService<SensorValue> imp
    private static Logger logger = Logger.getLogger(ControllerCommandServiceImpl.class);
 
    @Override
+   @Transactional
    public void updateSensorValues(Account account, File logsFolder) {
       File sensorFolder = new File(logsFolder, "sensor");
       if(!sensorFolder.exists()){

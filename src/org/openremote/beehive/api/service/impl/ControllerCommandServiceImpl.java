@@ -45,6 +45,7 @@ import org.openremote.beehive.domain.InitiateProxyControllerCommand;
 import org.openremote.beehive.domain.User;
 import org.openremote.beehive.utils.ZipUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * ControllerCommand service implementation.
@@ -58,6 +59,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    private SensorValueService sensorValueService;
 
    @Override
+   @Transactional
    public void save(ControllerCommand c) {
       genericDAO.save(c);
    }
@@ -101,6 +103,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    }
 
    @Override
+   @Transactional
    public ControllerCommand saveUploadLogsCommand(String username) {
       User user = accountService.loadByUsername(username);
 
@@ -110,6 +113,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    }
 
    @Override
+   @Transactional
    public InitiateProxyControllerCommand saveProxyControllerCommand(User user, String url) {
       InitiateProxyControllerCommand command = new InitiateProxyControllerCommand(user.getAccount(), Type.INITIATE_PROXY, url);
       save(command);
@@ -117,6 +121,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    }
 
    @Override
+   @Transactional
    public void saveUpdateControllerCommand(String username, File resource) throws IOException{
       User user = accountService.loadByUsername(username);
       File userDir = resourceService.getUserFolder(user.getAccount().getOid(), Constant.CONTROLLER_UPDATES_PATH);
@@ -130,6 +135,7 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    }
    
    @Override
+   @Transactional
    public void saveLogs(ControllerCommand controllerCommand, User user, File resource) throws IOException {
       // FIXME: make sure we can't overwrite the logs dir from a panel resource
       File userDir = resourceService.getUserFolder(user.getAccount().getOid(), Constant.CONTROLLER_LOGS_PATH);
@@ -151,11 +157,13 @@ public class ControllerCommandServiceImpl extends BaseAbstractService<Controller
    }
 
    @Override
+   @Transactional
    public ControllerCommand findControllerCommandById(Long id) {
       return genericDAO.getById(ControllerCommand.class, id);
    }
 
    @Override
+   @Transactional
    public void update(ControllerCommand controllerCommand) {
       genericDAO.saveOrUpdate(controllerCommand);
    }
