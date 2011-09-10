@@ -22,12 +22,12 @@
 	<classpathentry kind="lib" path="lib/core/dom4j/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/core/ehcache/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/core/flexjson/flexjson.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/ejb3-persistence.jar"/>
+	<classpathentry kind="lib" path="lib/core/antlr-2.7.6/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/core/javax/persistence-api-1.0-rev-1.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate3.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/jta.jar"/>
+	<classpathentry kind="lib" path="lib/core/javax/transaction-api-1.1-rev-1.jar"/>
 	<classpathentry kind="lib" path="lib/core/jakarta-oro/jakarta-oro.jar"/>
 	<classpathentry kind="lib" path="lib/core/javassist/javassist-3.6.0.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/jettison/jettison-1.0.1.jar"/>
