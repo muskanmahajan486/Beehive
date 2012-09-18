@@ -29,6 +29,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.dto.TemplateDTO;
 import org.openremote.beehive.api.service.TemplateService;
@@ -41,18 +43,28 @@ import org.openremote.beehive.api.service.TemplateService;
 @Path("/templates")
 public class PublicTemplatesRestService extends RESTBaseService {
    
+  private static final Log logger = LogFactory.getLog(PublicTemplatesRestService.class);
+
    @Path("keywords/{keywords}/page/{page}")
    @GET
    @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
    public Response getTemplates(@PathParam("keywords") String keywords, @PathParam("page") int page,
          @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) {
+     
+     logger.debug("search templates, keywords : " + keywords + ", page : " + page);
+     logger.debug("Provided credentials : " + credentials);
+
       if (!authorize(credentials)) return unAuthorizedResponse();
+      
+      logger.debug("Authorization OK, getting resources");
+
       String newKeywords = keywords;
       if (keywords.equals(TemplateService.NO_KEYWORDS)) {
          newKeywords = "";
       }
       List<TemplateDTO> list = getTemplateService().loadPublicTemplatesByKeywordsAndPage(newKeywords, page);
       if (list != null) {
+        logger.debug("Got a list of templates, building response");
          return buildResponse(new TemplateListing(list));
       }
       return resourceNotFoundResponse();

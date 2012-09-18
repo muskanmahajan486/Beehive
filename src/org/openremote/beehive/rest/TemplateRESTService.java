@@ -38,6 +38,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.util.GenericType;
@@ -59,6 +61,8 @@ import org.openremote.beehive.domain.Template;
 
 @Path("/account/{account_id}")
 public class TemplateRESTService extends RESTBaseService {
+
+  private static final Log logger = LogFactory.getLog(TemplateRESTService.class);
 
    /**
     * Get all templates by account id.
@@ -107,7 +111,10 @@ public class TemplateRESTService extends RESTBaseService {
          @PathParam("template_id") long templateId,
          @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) {
       
+     logger.debug("getTemplateResources, accountId : " + accountId + ", templateId : " + templateId);
+     logger.debug("Provided credentials : " + credentials);
       if (!authorize(accountId, credentials)) return unAuthorizedResponse();
+      logger.debug("Authorization OK, getting resources");
       File templateZip = getTemplateService().getTemplateResourceZip(templateId);
       if (templateZip != null) {
          return buildResponse(templateZip);
