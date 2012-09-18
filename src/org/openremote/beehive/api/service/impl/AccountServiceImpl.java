@@ -90,7 +90,7 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
 
    @Override
    public User loadByHTTPBasicCredentials(String credentials) {
-      if (credentials.startsWith(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX)) {
+      if (credentials != null && credentials.startsWith(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX)) {
          credentials = credentials.replaceAll(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX, "");
          credentials = Base64.decode(credentials);
          String[] arr = credentials.split(":");
