@@ -99,7 +99,7 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
             String password = arr[1];
             User user = loadByUsername(username);
             String encodedPassword = new Md5PasswordEncoder().encodePassword(password, username);
-            if (user != null && user.getPassword().equals(encodedPassword)) {
+            if (user != null && (user.getPassword().equals(encodedPassword) || user.getPassword().equals(password))) {
                return user;
             }
          }
