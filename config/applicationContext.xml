@@ -28,9 +28,6 @@
                 <value>org.openremote.beehive.domain.User</value>
                 <value>org.openremote.beehive.domain.Role</value>
                 <value>org.openremote.beehive.domain.Account</value>
-                <value>org.openremote.beehive.domain.ControllerCommand</value>
-                <value>org.openremote.beehive.domain.InitiateProxyControllerCommand</value>
-                <value>org.openremote.beehive.domain.SensorValue</value>
             </list>
         </property>
         <property name="mappingResources">
@@ -45,10 +42,6 @@
 		<property name="workDir" value="${work.dir}" />
 		<property name="iconsDir" value="${icons.dir}" />
 		<property name="lircCrawRegex" value="${lirc.craw.regex}" />
-		<property name="proxyHostName" value="${proxy.host.name}" />
-		<property name="proxyPort" value="${proxy.port}" />
-		<property name="proxyTimeout" value="${proxy.timeout}" />
-		<property name="proxyClientPortRange" value="${proxy.clientPortRange}" />
 	</bean>
 	
 
