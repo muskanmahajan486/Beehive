@@ -32,7 +32,6 @@ import org.openremote.beehive.Configuration;
 import org.openremote.beehive.api.service.SyncHistoryService;
 import org.openremote.beehive.api.service.impl.SVNDelegateServiceImpl;
 import org.openremote.beehive.domain.SyncHistory;
-import org.openremote.beehive.proxy.ProxyServer;
 import org.openremote.beehive.repo.SVNClientFactory;
 import org.openremote.beehive.spring.SpringContext;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
@@ -46,7 +45,6 @@ import org.tigris.subversion.svnclientadapter.SVNUrl;
  */
 public class ApplicationListener implements ServletContextListener {
    private ISVNClientAdapter svnClient = SVNClientFactory.getSVNClient();
-   private ProxyServer proxyServer;
    private static Configuration configuration = (Configuration) SpringContext.getInstance().getBean("configuration");
    private static SyncHistoryService syncHistoryService = (SyncHistoryService) SpringContext.getInstance().getBean(
          "syncHistoryService");
@@ -76,9 +74,6 @@ public class ApplicationListener implements ServletContextListener {
       if (svnUrl != null) {
          checkWorkCopyExists(svnUrl, workCopyDir);
       }
-      logger.info("Starting proxy server");
-      proxyServer = new ProxyServer();
-      proxyServer.start();
    }
 
    private SVNUrl checkRepoExists(String svnDir, File svnRepo, SVNUrl svnUrl, File workCopyDir) {
@@ -155,10 +150,5 @@ public class ApplicationListener implements ServletContextListener {
     */
    @Override
    public void contextDestroyed(ServletContextEvent arg0) {
-      if(proxyServer != null){
-         logger.info("Stopping proxy server");
-         proxyServer.halt();
-         proxyServer = null;
-      }
    }
 }
