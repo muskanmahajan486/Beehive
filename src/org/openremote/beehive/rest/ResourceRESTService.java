@@ -33,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.dto.DirectoryDTO;
 import org.openremote.beehive.api.service.ResourceService;
@@ -55,7 +56,8 @@ public class ResourceRESTService extends RESTBaseService{
    public static final int TIMEOUT_CODE = 504;
    public static final int TIMEOUT_MILLISECOND = 45000;
    
-   
+   private static Logger log = Logger.getLogger(ResourceRESTService.class);
+
    /**
     * Controller will use this method to download openremote.zip online.
     * 
@@ -216,7 +218,11 @@ public class ResourceRESTService extends RESTBaseService{
     *  
     */
    protected boolean authorize(String username, String credentials) {
-      return authorize(username, credentials, true);
+      if (authorize(username, credentials, true)) {
+        log.warn("Authorized user '" + username + "' using hashed credentials");
+        return true;
+      }
+      return authorize(username, credentials, false);
    }
    
    protected ResourceService getResourceService() {
