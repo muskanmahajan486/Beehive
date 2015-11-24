@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="lib/compile/javax.servlet.jar"/>
 	<classpathentry kind="lib" path="lib/compile/javax.servlet.jsp.jar"/>
 	<classpathentry kind="lib" path="lib/core/asm/asm.jar"/>
-	<classpathentry kind="lib" path="lib/core/aspectjweaver/aspectjweaver.jar"/>
 	<classpathentry kind="lib" path="lib/core/cglib/cglib-2.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons/commons-beanutils.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons/commons-cli-1.1.jar"/>
@@ -23,27 +22,18 @@
 	<classpathentry kind="lib" path="lib/core/dom4j/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/core/ehcache/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/core/flexjson/flexjson.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/core/hibernate/hibernate3.jar"/>
-	<classpathentry kind="lib" path="lib/core/hibernate/jta.jar"/>
 	<classpathentry kind="lib" path="lib/core/jakarta-oro/jakarta-oro.jar"/>
 	<classpathentry kind="lib" path="lib/core/javassist/javassist-3.6.0.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/jettison/jettison-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/core/json/json.jar"/>
 	<classpathentry kind="lib" path="lib/core/log4j/log4j-1.2.11.jar"/>
-	<classpathentry kind="lib" path="lib/core/mail/activation.jar"/>
-	<classpathentry kind="lib" path="lib/core/mail/mail.jar"/>
-	<classpathentry kind="lib" path="lib/core/mysql-connector/mysql-connector-java-5.0.3-bin.jar"/>
 	<classpathentry kind="lib" path="lib/core/quartz/quartz-all-1.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/core/resteasy/jaxb-impl-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/core/resteasy/jaxrs-api-1.0.1.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/resteasy/resteasy-jaxb-provider-1.0.1.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/resteasy/resteasy-jaxrs-1.0.1.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/resteasy/resteasy-spring-1.0.1.GA.jar"/>
-	<classpathentry kind="lib" path="lib/core/resteasy/rome-1.0RC1.jar"/>
 	<classpathentry kind="lib" path="lib/core/scannotation/scannotation-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/core/sitemesh/sitemesh-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/core/slf4j/slf4j-api-1.5.2.jar"/>
@@ -65,16 +55,22 @@
 	<classpathentry kind="lib" path="lib/core/xfire/xfire-core-1.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/core/xfire/xfire-java5-1.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/core/xfire/xfire-jsr181-api-1.0-M1.jar"/>
-	<classpathentry kind="lib" path="lib/core/xmlParserAPIs/xmlParserAPIs-2.6.2.jar"/>
 	<classpathentry kind="lib" path="lib/core/XmlSchema/XmlSchema-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-beanutils-core/commons-beanutils-core-1.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit/junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-test/spring-test-2.5.5.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JDK 6"/>
 	<classpathentry kind="lib" path="lib/test/hsqldb/hsqldb.jar"/>
 	<classpathentry kind="lib" path="lib/core/resteasy/resteasy-multipart-provider-1.0.2.GA.jar"/>
 	<classpathentry kind="lib" path="lib/core/commons/commons-io-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/core/jdom/jaxen-1.1-beta-9.jar"/>
 	<classpathentry kind="lib" path="lib/core/jdom/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/core/antlr-2.7.6/antlr-2.7.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JDK 6"/>
+	<classpathentry kind="lib" path="lib/core/javax/persistence-api-1.0-rev-1.jar"/>
+	<classpathentry kind="lib" path="lib/core/javax/transaction-api-1.1-rev-1.jar"/>
+	<classpathentry kind="lib" path="lib/core/jaxen/jaxen-1.1-beta-9.jar"/>
+	<classpathentry kind="lib" path="lib/core/jsr311/jaxrs-api-1.2.1.GA.jar"/>
+	<classpathentry kind="lib" path="lib/core/mail/activation-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/core/mail/mail-1.4.3.jar"/>
+	<classpathentry kind="lib" path="lib/core/rome/rome-1.0RC1.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>
