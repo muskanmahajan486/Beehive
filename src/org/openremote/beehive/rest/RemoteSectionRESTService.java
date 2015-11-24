@@ -50,7 +50,7 @@ public class RemoteSectionRESTService extends RESTBaseService {
       if (model == null) {
          return resourceNotFoundResponse();
       }
-      return buildResponse(new RemoteSectionListing(getRemoteSectionService().findByModelId(model.getId())));
+      return buildResponse(new RemoteSectionListing(getRemoteSectionService().findByModelId(model.getOid())));
    }
 
    /**

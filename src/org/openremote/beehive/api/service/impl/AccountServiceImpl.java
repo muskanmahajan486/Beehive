@@ -19,15 +19,14 @@
 */
 package org.openremote.beehive.api.service.impl;
 
-import org.apache.log4j.Logger;
 import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.service.AccountService;
 import org.openremote.beehive.domain.Account;
 import org.openremote.beehive.domain.Code;
 import org.openremote.beehive.domain.User;
+import org.springframework.security.providers.encoding.Md5PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.atlassian.crowd.integration.http.HttpAuthenticator;
-import com.atlassian.crowd.integration.http.HttpAuthenticatorFactory;
 import com.sun.syndication.io.impl.Base64;
 
 /**
@@ -37,9 +36,8 @@ import com.sun.syndication.io.impl.Base64;
  */
 public class AccountServiceImpl extends BaseAbstractService<Code> implements AccountService {
 
-   private static Logger log = Logger.getLogger(AccountServiceImpl.class);
-   
    @Override
+   @Transactional
    public void save(Account a) {
       genericDAO.save(a);
    }
@@ -67,27 +65,11 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
             if (accId == 0L || accId != accountId) {
                return false;
             }
+            User user = loadByUsername(username);
             if (!isPasswordEncoded) {
-               HttpAuthenticator authenticator = HttpAuthenticatorFactory.getHttpAuthenticator();
-               try {
-                  authenticator.verifyAuthentication(username, password);
-                  return true;
-               } catch (Exception e) {
-                  log.error("Can't verify user " + username, e);
-               }
+               password = new Md5PasswordEncoder().encodePassword(password, username);
             }
-         } else if (arr.length == 3) { // for unit tests
-            String username = arr[0];
-            String password = arr[1];
-            String test = arr[2];
-            if (!"test".equals(test)) {
-               return false;
-            }
-            long accId = queryAccountIdByUsername(username);
-            if (accId == 0L || accId != accountId) {
-               return false;
-            }
-            if (!isPasswordEncoded) {
+            if (user != null && user.getPassword().equals(password)) {
                return true;
             }
          }
@@ -98,7 +80,7 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
 
    @Override
    public boolean isHTTPBasicAuthorized(long accountId, String credentials) {
-      return isHTTPBasicAuthorized(accountId, credentials, false);
+      return isHTTPBasicAuthorized(accountId, credentials, true);
    }
 
    @Override
@@ -107,7 +89,7 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
    }
 
    @Override
-   public boolean isHTTPBasicAuthorized(String credentials) {
+   public User loadByHTTPBasicCredentials(String credentials) {
       if (credentials != null && credentials.startsWith(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX)) {
          credentials = credentials.replaceAll(Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX, "");
          credentials = Base64.decode(credentials);
@@ -115,35 +97,14 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
          if (arr.length == 2) {
             String username = arr[0];
             String password = arr[1];
-            HttpAuthenticator authenticator = HttpAuthenticatorFactory.getHttpAuthenticator();
-            try {
-               authenticator.verifyAuthentication(username, password);
-               return true;
-            } catch (Exception e) {
-               log.error("Can't verify user " + username, e);
+            User user = loadByUsername(username);
+            String encodedPassword = new Md5PasswordEncoder().encodePassword(password, username);
+            if (user != null && (user.getPassword().equals(encodedPassword) || user.getPassword().equals(password))) {
+               return user;
             }
-         } else if (arr.length == 3) { // for unit tests
-            String username = arr[0];
-            String password = arr[1];
-            String test = arr[2];
-            if (!"test".equals(test)) {
-               return false;
-            }
-            long accId = queryAccountIdByUsername(username);
-            if (accId == 0L) {
-               return false;
-            }
-            return true;
          }
       }
-
-      return false;
+      // let's be lax and not throw a BAD_REQUEST to allow the user to retry
+      return null;
    }
-
-   @Override
-   public Account getById(long id) {
-	  return genericDAO.getById(Account.class, id);
-   }
-   
-
 }

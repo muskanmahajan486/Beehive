@@ -19,13 +19,16 @@
 */
 package org.openremote.beehive.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.openremote.beehive.api.dto.AccountDTO;
-import org.openremote.beehive.api.dto.UserDTO;
 
 
 
@@ -42,24 +45,21 @@ public class User extends BusinessEntity {
    /** The username. */
    private String username;
    
+   /** The password. */
+   private String password;
+   
    /** The account. */
    private Account account;
    
-   /** The token is for the user reset password. */
-   private String token;
+   /** The roles. */
+   private List<Role> roles;
    
-   /** Store the pending user's role, its a display name, like "Building Modeler","UI Designer". */
-   private String pendingRoleName;
    
    /**
     * Instantiates a new user.
     */
    public User() {
-      account  = new Account();
-   }
-
-   public User(Account account) {
-      this.account = account;
+      roles = new ArrayList<Role>();
    }
 
    /**
@@ -82,6 +82,25 @@ public class User extends BusinessEntity {
    }
    
    /**
+    * Gets the password.
+    * 
+    * @return the password
+    */
+   @Column(nullable = false)
+   public String getPassword() {
+      return password;
+   }
+   
+   /**
+    * Sets the password.
+    * 
+    * @param password the new password
+    */
+   public void setPassword(String password) {
+      this.password = password;
+   }
+   
+   /**
     * Gets the account.
     * 
     * @return the account
@@ -100,31 +119,33 @@ public class User extends BusinessEntity {
       this.account = account;
    }
    
-   @Column(name = "token")
-   public String getToken() {
-      return token;
-   }
-
-   public void setToken(String token) {
-      this.token = token;
-   }
-   
-   @Column(name = "pending_role_name")
-   public String getPendingRoleName() {
-      return pendingRoleName;
-   }
-
-   public void setPendingRoleName(String pendingRoleName) {
-      this.pendingRoleName = pendingRoleName;
+   /**
+    * Gets the roles.
+    * 
+    * @return the roles
+    */
+   @ManyToMany
+   @JoinTable(name = "user_role", joinColumns = { @JoinColumn(name = "user_oid") }, inverseJoinColumns = { @JoinColumn(name = "role_oid") })
+   public List<Role> getRoles() {
+      return roles;
    }
    
-   public UserDTO toDTO() {
-	      UserDTO dto = new UserDTO();
-	      dto.setId(getOid());
-	      dto.setUsername(username);
-	      dto.setPendingRoleName(pendingRoleName);
-	      dto.setToken(token);
-	      dto.setAccount(new AccountDTO(account.getOid()));
-	      return dto;
+   /**
+    * Sets the roles.
+    * 
+    * @param roles the new roles
+    */
+   public void setRoles(List<Role> roles) {
+      this.roles = roles;
    }
+   
+   /**
+    * Adds the role.
+    * 
+    * @param role the role
+    */
+   public void addRole(Role role) {
+      roles.add(role);
+   }
+   
 }

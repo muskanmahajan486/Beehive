@@ -4,6 +4,6 @@
         onchange="showSelect(this.id,this.options[this.selectedIndex].value)">
     <option value="0">------------</option>
     <c:forEach items="${items}" var="item">
-        <option value="${item.id}">${item.name}</option>
+        <option value="${item.oid}">${item.name}</option>
     </c:forEach>
 </select>

@@ -42,6 +42,7 @@ import org.openremote.beehive.domain.RemoteSection;
 import org.openremote.beehive.domain.Vendor;
 import org.openremote.beehive.file.LircConfFile;
 import org.openremote.beehive.utils.FileUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * {@inheritDoc}.
@@ -59,6 +60,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public List<ModelDTO> findModelsByVendorName(String vendorName) {
       if (genericDAO.getByNonIdField(Vendor.class, "name", vendorName) == null) {
          return null;
@@ -71,7 +73,6 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
          ModelDTO modelDTO = new ModelDTO();
          try {
             BeanUtils.copyProperties(modelDTO, model);
-            modelDTO.setId(model.getOid());
          } catch (IllegalAccessException e) {
             // TODO handle exception
             e.printStackTrace();
@@ -87,13 +88,13 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public List<ModelDTO> findModelsByVendorId(long vendorId) {
       List<ModelDTO> modelDTOList = new ArrayList<ModelDTO>();
       for (Model model : genericDAO.loadById(Vendor.class, vendorId).getModels()) {
          ModelDTO modelDTO = new ModelDTO();
          try {
             BeanUtils.copyProperties(modelDTO, model);
-            modelDTO.setId(model.getOid());
          } catch (IllegalAccessException e) {
             // TODO handle exception
             e.printStackTrace();
@@ -109,6 +110,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public ModelDTO loadByVendorNameAndModelName(String vendorName, String modelName) {
       Model model = null;
       List<Model> models = genericDAO.findByDetachedCriteria(getDetachedCriteria().createAlias("vendor", "v").add(
@@ -125,7 +127,6 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
       ModelDTO modelDTO = new ModelDTO();
       try {
          BeanUtils.copyProperties(modelDTO, model);
-         modelDTO.setId(model.getOid());
       } catch (IllegalAccessException e) {
          // TODO handle exception
          e.printStackTrace();
@@ -141,11 +142,11 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * 
     * @see org.openremote.beehive.api.service.ModelService#loadModelById(long)
     */
+   @Transactional
    public ModelDTO loadModelById(long modelId) {
       ModelDTO modelDTO = new ModelDTO();
       try {
          BeanUtils.copyProperties(modelDTO, loadById(modelId));
-         modelDTO.setId(modelId);
       } catch (IllegalAccessException e) {
          logger.error("", e);
       } catch (InvocationTargetException e) {
@@ -158,6 +159,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public void add(FileInputStream fis, String vendorName, String modelName) {
       Model model = createModel(findVendor(vendorName), modelName);
       List<RemoteSection> remoteSectionList = LircConfFile.getRemoteSectionList(fis);
@@ -185,6 +187,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * @param model
     *           the model
     */
+   @Transactional
    public void merge(FileInputStream fis, long id) {
       List<RemoteSection> remoteSectionList = LircConfFile.getRemoteSectionList(fis);
       Model model = loadById(id);
@@ -253,6 +256,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * 
     * @return the vendor
     */
+   @Transactional
    private Vendor findVendor(String vendorName) {
       Vendor vendor = genericDAO.getByNonIdField(Vendor.class, "name", vendorName);
       if (vendor == null) {
@@ -274,6 +278,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * 
     * @return the model
     */
+   @Transactional
    private Model createModel(Vendor vendor, String modelName) {
       Model targetModel = null;
       targetModel = new Model();
@@ -287,6 +292,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public String exportText(long id) {
       Model model = genericDAO.loadById(Model.class, id);
       return model.allSectionText();
@@ -295,6 +301,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public InputStream exportStream(long id) {
       return new ByteArrayInputStream(exportText(id).getBytes());
    }
@@ -312,6 +319,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public void deleteByName(String modelName) {
       Model model = genericDAO.getByNonIdField(Model.class, "fileName", modelName);
       if (model != null) {
@@ -339,6 +347,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * {@inheritDoc}
     * 
     */
+   @Transactional
    public Model findByFileName(String fileName) {
       return genericDAO.getByNonIdField(Model.class, "fileName", fileName);
    }
@@ -347,6 +356,7 @@ public class ModelServiceImpl extends BaseAbstractService<Model> implements Mode
     * {@inheritDoc}
     * 
     */
+   @Transactional
    public void syncWith(File file) {
       if (file.isDirectory() || FileUtil.isIgnored(file)) {
          return;

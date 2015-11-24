@@ -24,10 +24,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 
@@ -116,4 +119,29 @@ public class ZipUtil {
       }
    }
 
+   public static void zip(String sourceDirectory, File backupFile) throws IOException {
+      ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(backupFile));
+      File directory = new File(sourceDirectory);
+      zipFolder(directory, directory.toURI(), zip);
+      zip.flush();
+      zip.close();
+   }
+
+   private static void zipFolder(File directory, URI base, ZipOutputStream zip) throws IOException {
+      for(File file : directory.listFiles()){
+         if(file.isDirectory())
+            zipFolder(file, base, zip);
+         else{
+            // this should work regardless of http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6226081
+            // since we are not creating ".." parts
+            String relativePath = base.relativize(file.toURI()).getPath();
+            ZipEntry zipEntry = new ZipEntry(relativePath);
+            zip.putNextEntry(zipEntry);
+            InputStream is = new FileInputStream(file);
+            IOUtils.copy(is, zip);
+            is.close();
+            zip.closeEntry();
+         }
+      }
+   }
 }

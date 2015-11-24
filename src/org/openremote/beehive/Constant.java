@@ -61,6 +61,10 @@ public final class Constant {
 
    public final static String PANEL_XML = "panel.xml";
 
+   public final static String CONTROLLER_LOGS_PATH = "logs";
+   
+   public final static String CONTROLLER_UPDATES_PATH = "updates";
+   
    public final static String OPENREMOTE_WEBSITE = "http://www.openremote.org";
    
    public final static String OPENREMOTE_NAMESPACE= "or";

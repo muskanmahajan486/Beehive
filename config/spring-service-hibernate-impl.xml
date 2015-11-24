@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"
        default-autowire="byName">
 
+<!-- 
     <aop:config proxy-target-class="true">
         <aop:pointcut id="serviceMethods"
                       expression="execution(* org.openremote.beehive.api.service.impl.*.*(..))"/>
@@ -24,10 +25,13 @@
             <tx:method name="update*" propagation="REQUIRED"/>
             <tx:method name="merge*" propagation="REQUIRED"/>
             <tx:method name="sync*" propagation="REQUIRED"/>
-            <tx:method name="get*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
-
+ -->
+ 
+    <!-- enable the configuration of transactional behavior based on annotations -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+  
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory">
@@ -76,22 +80,4 @@
 		parent="abstractService">
 	</bean>
 	<bean id="resourceService" class="org.openremote.beehive.api.service.impl.ResourceServiceImpl" parent="abstractService"/>
-	<bean id="userService" class="org.openremote.beehive.api.service.impl.UserServiceImpl"
-	   parent="abstractService"/>
-	<bean id="controllerConfigService" class="org.openremote.beehive.api.service.impl.ControllerConfigServiceImpl"
-	   parent="abstractService"/>
-	<bean id="deviceService" class="org.openremote.beehive.api.service.impl.DeviceServiceImpl"
-	   parent="abstractService"/>
-	<bean id="deviceCommandService" class="org.openremote.beehive.api.service.impl.DeviceCommandServiceImpl"
-	   parent="abstractService"/>
-	<bean id="sensorService" class="org.openremote.beehive.api.service.impl.SensorServiceImpl"
-	   parent="abstractService"/>
-	<bean id="switchService" class="org.openremote.beehive.api.service.impl.SwitchServiceImpl"
-	   parent="abstractService"/>
-	<bean id="sliderService" class="org.openremote.beehive.api.service.impl.SliderServiceImpl"
-	   parent="abstractService"/>
-	<bean id="deviceMacroService" class="org.openremote.beehive.api.service.impl.DeviceMacroServiceImpl"
-	   parent="abstractService"/>
-	<bean id="deviceMacroItemService" class="org.openremote.beehive.api.service.impl.DeviceMacroItemServiceImpl"
-	   parent="abstractService"/>
 </beans>

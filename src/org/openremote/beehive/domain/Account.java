@@ -27,13 +27,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.openremote.beehive.domain.modeler.ControllerConfig;
-import org.openremote.beehive.domain.modeler.Device;
-import org.openremote.beehive.domain.modeler.DeviceMacro;
-import org.openremote.beehive.domain.modeler.Sensor;
-import org.openremote.beehive.domain.modeler.Slider;
-import org.openremote.beehive.domain.modeler.Switch;
-
 
 /**
  * The Class Account.
@@ -47,27 +40,10 @@ public class Account extends BusinessEntity {
 
    private List<User> users;
    
-   private List<Device> devices;
-   
-   private List<DeviceMacro> deviceMacros;
-   
-   private List<Sensor> sensors;
-   
-   private List<Switch> switches;
-   
-   private List<Slider> sliders;
-   
-   private List<ControllerConfig> configs;
-   
    private List<Template> templates;
 
    public Account() {
-      devices = new ArrayList<Device>();
-      deviceMacros = new ArrayList<DeviceMacro>();
-      sensors = new ArrayList<Sensor>();
       templates = new ArrayList<Template>();
-      switches = new ArrayList<Switch>();
-      configs = new ArrayList<ControllerConfig>();
    }
 
    @OneToMany(mappedBy = "account")
@@ -79,51 +55,6 @@ public class Account extends BusinessEntity {
       this.users = users;
    }
 
-   @OneToMany(mappedBy = "account")
-   public List<Device> getDevices() {
-      return devices;
-   }
-
-   public void setDevices(List<Device> devices) {
-      this.devices = devices;
-   }
-   
-   @OneToMany(mappedBy = "account")
-   public List<DeviceMacro> getDeviceMacros() {
-      return deviceMacros;
-   }
-
-   public void setDeviceMacros(List<DeviceMacro> deviceMacros) {
-      this.deviceMacros = deviceMacros;
-   }
-   
-   @OneToMany(mappedBy = "account")
-   public List<Sensor> getSensors() {
-      return sensors;
-   }
-
-   public void setSensors(List<Sensor> sensors) {
-      this.sensors = sensors;
-   }
-   
-   @OneToMany(mappedBy = "account")
-   public List<Switch> getSwitches() {
-      return switches;
-   }
-
-   public void setSwitches(List<Switch> switches) {
-      this.switches = switches;
-   }
-   
-   @OneToMany(mappedBy = "account")
-   public List<Slider> getSliders() {
-      return sliders;
-   }
-
-   public void setSliders(List<Slider> sliders) {
-      this.sliders = sliders;
-   }
-   
    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
    public List<Template> getTemplates() {
       return templates;
@@ -140,13 +71,5 @@ public class Account extends BusinessEntity {
       }
    }
 
-   @OneToMany(mappedBy = "account")
-   public List<ControllerConfig> getConfigs() {
-      return configs;
-   }
-
-   public void setConfigs(List<ControllerConfig> configs) {
-      this.configs = configs;
-   }
-
+   
 }

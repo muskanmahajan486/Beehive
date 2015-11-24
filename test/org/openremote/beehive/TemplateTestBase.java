@@ -1,8 +1,5 @@
 package org.openremote.beehive;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.openremote.beehive.api.service.AccountService;
 import org.openremote.beehive.api.service.impl.GenericDAO;
@@ -28,14 +25,14 @@ public class TemplateTestBase extends TestBase {
    @Override
    protected void setUp() throws Exception {
       super.setUp();
-      User u = genericDAO.getByNonIdField(User.class, "username", "dan");
-      Account a = null;
-      if (u != null) {
-         a = u.getAccount();
-      } else {
-         a = new Account();
-      }
+
+      User user = new User();
+      user.setUsername("dan");
+      user.setPassword("cong");
+      genericDAO.save(user);
       
+      Account a = new Account();
+      user.setAccount(a);
       Template t1 = new Template();
       t1.setAccount(a);
       t1.setName("t1");
@@ -54,20 +51,10 @@ public class TemplateTestBase extends TestBase {
       a.addTemplate(t3);
       accountService.save(a);
       
-      if (u == null) {
-         User user = new User();
-         user.setUsername("dan");
-         user.setAccount(a);
-         List<User> users = new ArrayList<User>();
-         users.add(user);
-         a.setUsers(users);
-         genericDAO.save(user);
-         
-         Icon i = new Icon();
-         i.setFileName("menu.png");
-         i.setName("menu");
-         genericDAO.save(i);
-      }
+      Icon i = new Icon();
+      i.setFileName("menu.png");
+      i.setName("menu");
+      genericDAO.save(i);
    }
 
    
@@ -75,13 +62,13 @@ public class TemplateTestBase extends TestBase {
    @Override
    protected void tearDown() throws Exception {
       super.tearDown();
-      List<Template> templates = genericDAO.loadAll(Template.class);
-      genericDAO.deleteAll(templates);
+      User u = genericDAO.getByNonIdField(User.class, "username", "dan");
+      genericDAO.delete(u);
    }
    
    protected void addCredential(MockHttpRequest mockHttpRequest) {
       mockHttpRequest.header(Constant.HTTP_AUTH_HEADER_NAME, Constant.HTTP_BASIC_AUTH_HEADER_VALUE_PREFIX
-            + Base64.encode("dan:cong:test"));
+            + Base64.encode("dan:cong"));
    }
 
 }

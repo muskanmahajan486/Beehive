@@ -22,6 +22,8 @@ package org.openremote.beehive.api.service;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import org.openremote.beehive.exception.FilePermissionException;
 /**
  * Service for manage resources for modeler.
  * @author javen, Dan
@@ -48,5 +50,8 @@ public interface ResourceService {
    
    String getPanelXMLByPanelNameFromAccount(String username, String panelName);
    
-   File getResource(String username, String fileName) throws FileNotFoundException;
+   File getResource(String username, String fileName) throws FileNotFoundException, FilePermissionException;
+
+   File getUserFolder(long accountOid, String subfolder);
+
 }

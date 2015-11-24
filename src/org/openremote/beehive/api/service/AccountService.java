@@ -34,15 +34,14 @@ public interface AccountService {
    
    User loadByUsername(String username);
    
-   boolean isHTTPBasicAuthorized(long accountId, String credentials);
+   User loadByHTTPBasicCredentials(String credentials);
    
-   boolean isHTTPBasicAuthorized(String credentials);
+   boolean isHTTPBasicAuthorized(long accountId, String credentials);
    
    boolean isHTTPBasicAuthorized(long accountId, String credentials, boolean isPasswordEncoded);
    
    boolean isHTTPBasicAuthorized(String username, String credentials, boolean isPasswordEncoded);
-   
+
    long queryAccountIdByUsername(String username);
 
-   Account getById(long id);
 }

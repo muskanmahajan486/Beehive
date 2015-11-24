@@ -39,6 +39,7 @@ import org.openremote.beehive.api.service.TemplateService;
 import org.openremote.beehive.domain.Account;
 import org.openremote.beehive.domain.Template;
 import org.openremote.beehive.utils.FileUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 
 public class TemplateServiceImpl extends BaseAbstractService<Template> implements TemplateService {
@@ -47,20 +48,40 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    protected Configuration configuration = null;
 
    @Override
+   @Transactional
    public List<TemplateDTO> loadAllPrivateTemplatesByAccountOid(long accountOid) {
       return loadAllTemplatesByAccountOidAndSharedType(accountOid,false);
    }
 
    @Override
+   @Transactional
    public List<TemplateDTO> loadAllPublicTemplatesByAccountOid(long accountOid) {
       return loadAllTemplatesByAccountOidAndSharedType(accountOid,true);
    }
 
+   @Transactional
    public List<TemplateDTO> loadPublicTemplatesByKeywordsAndPage(String keywords, int page) {
-      return loadTemplates(true, 0, keywords, page);
+      List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
+      DetachedCriteria critera = DetachedCriteria.forClass(Template.class);
+      critera.add(Restrictions.eq("shared", true));
+      if (keywords != null && keywords.trim().length() > 0) {
+         String[] kwords = keywords.split(KEYWORDS_SEPERATOR);
+         for (String keyword : kwords) {
+            critera.add(Restrictions.like("keywords", keyword, MatchMode.ANYWHERE));
+         }
+      }
+      List<Template> templates = genericDAO.findPagedDateByDetachedCriteria(critera, TEMPLATE_SIZE_PER_PAGE,
+            (TEMPLATE_SIZE_PER_PAGE) * page);
+      if (templates != null && templates.size() > 0) {
+         for (Template template : templates) {
+            templateDTOs.add(template.toDTO());
+         }
+      }
+      return templateDTOs;
    }
 
    @Override
+   @Transactional
    public TemplateDTO loadTemplateByOid(long templateOid) {
       Template template = genericDAO.getById(Template.class, templateOid);
       if (template == null) {
@@ -70,6 +91,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public long save(Template t) {
       long templateOid = (Long) genericDAO.save(t);
       createTemplateFolder(templateOid);
@@ -77,6 +99,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public boolean delete(long templateOid) {
       Template t = genericDAO.getById(Template.class, templateOid);
       if (t != null) {
@@ -103,6 +126,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
       return null;
    }
 
+   @Transactional
    private List<TemplateDTO> loadAllTemplatesByAccountOidAndSharedType(long accountOid,boolean shared) {
       List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
       Account account = genericDAO.getById(Account.class, accountOid);
@@ -162,6 +186,7 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
    }
 
    @Override
+   @Transactional
    public TemplateDTO updateTemplate(Template t) {
       try {
          Template oldTemplate = genericDAO.loadById(Template.class, t.getOid());
@@ -174,49 +199,6 @@ public class TemplateServiceImpl extends BaseAbstractService<Template> implement
       } catch (ObjectNotFoundException e) {
          return null;
       }
-   }
-
-   public List<TemplateDTO> loadPrivateTemplatesByKeywordsAndPage(long accountOid, String keywords, int page) {
-      return loadTemplates(false, accountOid, keywords, page);
-   }
-   
-   /**
-    * Load public or private templates by keywords and page.
-    * 
-    * @param shared
-    *             public or private
-    * @param accountOid 
-    *             the account oid, if equals 0, load public templates
-    * @param keywords
-    *             search template by keywords
-    * @param page
-    *             get the current page's results
-    * 
-    * @return the list< template dt o>
-    */
-   private List<TemplateDTO> loadTemplates(boolean shared, long accountOid, String keywords, int page) {
-      List<TemplateDTO> templateDTOs = new ArrayList<TemplateDTO>();
-      DetachedCriteria critera = DetachedCriteria.forClass(Template.class);
-      if (shared && accountOid == 0) {
-         critera.add(Restrictions.eq("shared", true));
-      } else {
-         critera.add(Restrictions.eq("account", genericDAO.getById(Account.class, accountOid)));
-         critera.add(Restrictions.eq("shared", false));
-      }
-      if (keywords != null && keywords.trim().length() > 0) {
-         String[] kwords = keywords.split(KEYWORDS_SEPERATOR);
-         for (String keyword : kwords) {
-            critera.add(Restrictions.like("keywords", keyword, MatchMode.ANYWHERE));
-         }
-      }
-      List<Template> templates = genericDAO.findPagedDateByDetachedCriteria(critera, TEMPLATE_SIZE_PER_PAGE,
-            (TEMPLATE_SIZE_PER_PAGE) * page);
-      if (templates != null && templates.size() > 0) {
-         for (Template template : templates) {
-            templateDTOs.add(template.toDTO());
-         }
-      }
-      return templateDTOs;
    }
 
 }

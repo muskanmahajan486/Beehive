@@ -19,12 +19,20 @@
 */
 package org.openremote.beehive.rest;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URI;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 import org.openremote.beehive.api.service.AccountService;
+import org.openremote.beehive.domain.User;
 import org.openremote.beehive.spring.ISpringContext;
 import org.openremote.beehive.spring.SpringContext;
 
@@ -38,6 +46,10 @@ public class RESTBaseService {
    
    private static Logger log = Logger.getLogger(RESTBaseService.class);
    
+   /* This is injected by JAX-RS */
+   @Context 
+   protected UriInfo uriInfo;
+
    protected Class<? extends ISpringContext> getSpringContextClass() {
       return SpringContext.class;
    }
@@ -72,7 +84,36 @@ public class RESTBaseService {
       return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate",
             "Basic realm=\"OPENREMOTE_Beehive\"").build();
    }
-   
+
+   protected Response notFoundResponse() {
+      return Response.status(Response.Status.NOT_FOUND).build();
+   }
+
+   protected Response badRequestResponse(String reason) {
+      return Response.status(Response.Status.BAD_REQUEST).entity(reason).build();
+   }
+
+   protected URI getURI(Class<?> klass, String method, Object... params){
+      return getUriBuilder(klass, method).build(params);
+   }
+
+   protected UriBuilder getUriBuilder(Class<?> klass, String method){
+      return uriInfo.getBaseUriBuilder().path(klass).path(klass, method);
+   }
+
+   protected void checkNotEmpty(File resource) {
+      if(resource == null
+            || resource.length() == 0)
+         throw new WebApplicationException(badRequestResponse("Empty resource not allowed"));
+   }
+
+   protected <T> T notFoundIfNull(T entity) {
+      if(entity == null){
+         throw new WebApplicationException(HttpURLConnection.HTTP_NOT_FOUND);
+      }
+      return entity;
+   }
+
    /*
     * If the user was not validated, fail with a
     * 401 status code (UNAUTHORIZED) and
@@ -86,14 +127,36 @@ public class RESTBaseService {
       }
       return true;
    }
-   
-   protected boolean authorize(String credentials) {
-      if (!getAccountService().isHTTPBasicAuthorized(credentials)) {
+
+   protected boolean authorize(String username, String credentials, boolean isPasswordEncoded) {
+      if (!getAccountService().isHTTPBasicAuthorized(username, credentials, isPasswordEncoded)) {
          return false;
       }
       return true;
    }
+
+   protected boolean authorize(String credentials) {
+      return getAccountService().loadByHTTPBasicCredentials(credentials) != null;
+   }
+
+   protected User checkCredentials(String username, String credentials) {
+      // this returns non-null or throws
+      User user = checkCredentials(credentials);
+      // check that the username matches
+      if (!username.equals(user.getUsername())) {
+         throw new WebApplicationException(unAuthorizedResponse());
+      }
+      return user;
+   }
    
+   protected User checkCredentials(String credentials) {
+      User user = getAccountService().loadByHTTPBasicCredentials(credentials);
+      if (user == null) {
+         throw new WebApplicationException(unAuthorizedResponse());
+      }
+      return user;
+   }
+
    protected AccountService getAccountService() {
       return (AccountService) getSpringContextInstance().getBean("accountService");
    }

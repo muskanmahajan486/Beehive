@@ -55,5 +55,4 @@ public interface TemplateService {
    List<TemplateDTO> loadPublicTemplatesByKeywordsAndPage(String keywords,int page);
    
    TemplateDTO updateTemplate(Template t);
-   List<TemplateDTO> loadPrivateTemplatesByKeywordsAndPage(long accountOid, String keywords,int page);
 }

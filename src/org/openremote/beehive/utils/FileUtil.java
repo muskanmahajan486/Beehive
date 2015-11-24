@@ -565,4 +565,13 @@ public class FileUtil {
          throw ee;
       }
    }
+
+   public static boolean isParentOf(File parent, File child) {
+      try {
+         return child.getCanonicalPath().startsWith(parent.getCanonicalPath());
+      } catch (IOException e) {
+         // nothing we can do here
+         throw new RuntimeException(e);
+      }
+   }
 }

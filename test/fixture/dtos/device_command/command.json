@@ -1,1 +1,0 @@
-{"device":{"id":17,"model":"dev","name":"device1","vendor":"dev"},"id":0,"name":"command1","protocol":{"attributes":[{"id":0,"name":"url","value":"http://command1.com"}],"id":0,"type":"HTTP"},"sectionId":null}

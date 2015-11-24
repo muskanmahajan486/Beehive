@@ -146,8 +146,8 @@ public class BeehiveDatabaseController extends MultiActionController {
       RemoteSectionDTO remoteSectionDTO = remoteSectionService.loadFisrtRemoteSectionByModelId(modelId);
       mav.addObject("model", modelService.loadModelById(modelId));
       mav.addObject("section", remoteSectionDTO);
-      mav.addObject("options", remoteOptionService.findByRemoteSectionId(remoteSectionDTO.getId()));
-      mav.addObject("codes", codeService.findByRemoteSectionId(remoteSectionDTO.getId()));
+      mav.addObject("options", remoteOptionService.findByRemoteSectionId(remoteSectionDTO.getOid()));
+      mav.addObject("codes", codeService.findByRemoteSectionId(remoteSectionDTO.getOid()));
       return mav;
    }
 

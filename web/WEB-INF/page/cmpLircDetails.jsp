@@ -1,7 +1,7 @@
 <%@ include file="../../common/taglibs.jsp" %>
 <jsp:useBean id="commonUtils" class="org.apache.commons.lang.StringUtils"/>
 <div>
-<button onclick="window.open('lirc.html?method=export&id=${model.id}')"
+<button onclick="window.open('lirc.html?method=export&id=${model.oid}')"
 	class="buttonNonpersistent">Download LIRC configuration file</button>
 </div>
 <div id="lirc_details_title" class="content_head">
@@ -90,6 +90,6 @@
 </div>
 
 <div id="bottom">
-    <button onclick="window.open('lirc.html?method=export&id=${model.id}')" class="buttonNonpersistent">Download LIRC configuration file
+    <button onclick="window.open('lirc.html?method=export&id=${model.oid}')" class="buttonNonpersistent">Download LIRC configuration file
     </button>
 </div>

@@ -44,7 +44,7 @@
                                 onchange="showSelect(this.id,this.options[this.selectedIndex].value)">
                             <option value="0">------------</option>
                             <c:forEach items="${vendors}" var="vendor">
-                                <option value="${vendor.id}" <c:if test="${vendor.name eq vendorName}">selected</c:if>>${vendor.name}</option>
+                                <option value="${vendor.oid}" <c:if test="${vendor.name eq vendorName}">selected</c:if>>${vendor.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -62,7 +62,7 @@
                                 onchange="showSelect(this.id,this.options[this.selectedIndex].value)">
                             <option value="0">------------</option>
                             <c:forEach items="${models}" var="model">
-                                <option value="${model.id}" <c:if test="${model.name eq modelName}">selected</c:if>>${model.name}</option>
+                                <option value="${model.oid}" <c:if test="${model.name eq modelName}">selected</c:if>>${model.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -80,7 +80,7 @@
                                 onchange="showSelect(this.id,this.options[this.selectedIndex].value)">
                             <option value="0">------------</option>
                             <c:forEach items="${sections}" var="section">
-                                <option value="${section.id}" <c:if test="${section.id eq sectionId}">selected</c:if>>${section.name}</option>
+                                <option value="${section.oid}" <c:if test="${section.oid eq sectionId}">selected</c:if>>${section.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -90,7 +90,7 @@
             <div class="clear"></div>
             <div id="lirc_details_container" <c:if test="${showDetail eq null}">style="display:none"</c:if> <c:if test="${showDetail eq true}">style="display:block"</c:if>>
             	<div>
-				<button onclick="window.open('lirc.html?method=export&id=${model.id}')"
+				<button onclick="window.open('lirc.html?method=export&id=${model.oid}')"
 					class="buttonNonpersistent">Download LIRC configuration file</button>
 				</div>
 				<div id="lirc_details_title" class="content_head">
@@ -179,7 +179,7 @@
 				</div>
 				
 				<div id="bottom">
-				    <button onclick="window.open('lirc.html?method=export&id=${model.id}')" class="buttonNonpersistent">Download LIRC configuration file
+				    <button onclick="window.open('lirc.html?method=export&id=${model.oid}')" class="buttonNonpersistent">Download LIRC configuration file
 				    </button>
 				</div>
 				<c:if test="${showDetail eq true}">

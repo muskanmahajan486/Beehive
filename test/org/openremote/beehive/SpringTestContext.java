@@ -36,7 +36,7 @@ public class SpringTestContext implements ISpringContext {
 
    /** The context files. */
    private static String[] contextFiles = new String[] {"applicationContext-test.xml", "spring-service-hibernate-impl.xml",
-         "datasource-test.xml", "spring-servlet.xml" };
+         "datasource-test.xml", "spring-servlet-test.xml" };
 //   private static String[] contextFiles = new String[] { "spring-context-test.xml" };
    
    /** The ctx. */

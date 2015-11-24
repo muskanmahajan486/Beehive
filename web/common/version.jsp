@@ -9,7 +9,7 @@
      */
     String getVersion() {
       String revision = "$Revision: 436 $";
-      String headUrl = "$HeadURL: https://openremote.svn.sourceforge.net/svnroot/openremote/branches/feature/Beehive_Move_JDBC/web/common/version.jsp $";
+      String headUrl = "$HeadURL: https://openremote.svn.sourceforge.net/svnroot/openremote/branches/project/Beehive_3_0_0_Betas/web/common/version.jsp $";
       String version = org.openremote.beehive.utils.SvnUtil.getVersionLabel(headUrl,revision);
       return version;
     }

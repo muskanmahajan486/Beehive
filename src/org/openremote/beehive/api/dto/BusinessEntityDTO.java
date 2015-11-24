@@ -32,14 +32,14 @@ import javax.xml.bind.annotation.XmlElement;
 public abstract class BusinessEntityDTO implements Serializable {
 
    private static final long serialVersionUID = -3871334485197341321L;
-   private long id;
+   private long oid;
 
    @XmlElement(name = "id")
-   public long getId() {
-      return id;
+   public long getOid() {
+      return oid;
    }
 
-   public void setId(long id) {
-      this.id = id;
+   public void setOid(long oid) {
+      this.oid = oid;
    }
 }

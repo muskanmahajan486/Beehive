@@ -62,6 +62,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 		<path location="${classes.dir}"/>
 		<fileset dir="${lib.dir}/test" includes="**/*.jar"/>
 		<path location="${config.dir}"/>
+		<path location="${test.dir}"/>
 	</path>
 
 	<path id="cobertura.path.id">

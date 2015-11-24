@@ -30,6 +30,7 @@ import org.openremote.beehive.api.dto.VendorDTO;
 import org.openremote.beehive.api.service.VendorService;
 import org.openremote.beehive.domain.Vendor;
 import org.openremote.beehive.utils.FileUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * {@inheritDoc}.
@@ -46,13 +47,13 @@ public class VendorServiceImpl extends BaseAbstractService<Vendor> implements Ve
     * 
     * @return the list<VendorDTO>
     */
+   @Transactional
    public List<VendorDTO> loadAllVendors() {
       List<VendorDTO> vendorDTOs = new ArrayList<VendorDTO>();
       for (Vendor vendor : loadAll()) {
          VendorDTO vendorDTO = new VendorDTO();
          try {
             BeanUtils.copyProperties(vendorDTO, vendor);
-            vendorDTO.setId(vendor.getOid());
          } catch (IllegalAccessException e) {
             logger.error("error occurs while BeanUtils.copyProperties(vendorDTO, vendor);");
          } catch (InvocationTargetException e) {
@@ -69,6 +70,7 @@ public class VendorServiceImpl extends BaseAbstractService<Vendor> implements Ve
     * @param vendorName
     *           the vendor name
     */
+   @Transactional
    public void deleteByName(String vendorName) {
       Vendor vendor = loadByName(vendorName);
       if (vendor != null) {
@@ -82,6 +84,7 @@ public class VendorServiceImpl extends BaseAbstractService<Vendor> implements Ve
     * @param vendorName
     *           the vendor name
     */
+   @Transactional
    public void syncWith(File file) {
       if (file.isFile()) {
          return;
@@ -114,6 +117,7 @@ public class VendorServiceImpl extends BaseAbstractService<Vendor> implements Ve
     * @param vendorName
     *           the vendor name
     */
+   @Transactional
    public Vendor loadByName(String vendorName) {
       return genericDAO.getByNonIdField(Vendor.class, "name", vendorName);
    }

@@ -103,7 +103,7 @@ public class BeehiveLIRCDatabaseController extends MultiActionController {
           ModelDTO modelDTO = modelService.loadByVendorNameAndModelName(vendorName, modelName);
           if(modelDTO != null) {
               mav.addObject("modelName", modelName);
-              long modelId = modelDTO.getId();
+              long modelId = modelDTO.getOid();
               List<RemoteSectionDTO> sectionDTOs = remoteSectionService.findByModelId(modelId);
               if (sectionDTOs.size() > 1) {
                   mav.addObject("showSection", true);
@@ -146,8 +146,8 @@ public class BeehiveLIRCDatabaseController extends MultiActionController {
           mav.addObject("showDetail", true);
           mav.addObject("model", modelService.loadModelById(modelId));
           mav.addObject("section", remoteSectionDTO);
-          mav.addObject("options", remoteOptionService.findByRemoteSectionId(remoteSectionDTO.getId()));
-          mav.addObject("codes", codeService.findByRemoteSectionId(remoteSectionDTO.getId()));
+          mav.addObject("options", remoteOptionService.findByRemoteSectionId(remoteSectionDTO.getOid()));
+          mav.addObject("codes", codeService.findByRemoteSectionId(remoteSectionDTO.getOid()));
     }
 
    public void setIndex(String index) {

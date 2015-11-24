@@ -50,21 +50,23 @@ public class TemplateServiceTest extends TemplateTestBase {
       Assert.assertEquals("t3", templates.get(0).getName());
       Assert.assertEquals("content", templates.get(0).getContent());
    }
-   public void testSaveAndDelete() {
+   public void testSave() {
       Account a = genericDAO.getByMaxId(Account.class);
-      Template t4 = new Template();
-      t4.setAccount(a);
-      t4.setName("t3");
-      t4.setContent("content");
-      a.addTemplate(t4);
+      Template t3 = new Template();
+      t3.setAccount(a);
+      t3.setName("t3");
+      t3.setContent("content");
+      a.addTemplate(t3);
 
-      long templateOid = service.save(t4);
+      long templateOid = service.save(t3);
       Template t = genericDAO.loadById(Template.class, templateOid);
       assertEquals("t3", t.getName());
       assertEquals("content", t.getContent());
       assertEquals(a.getOid(), t.getAccount().getOid());
-      
-      assertTrue(service.delete(templateOid));
+   }
+   
+   public void testRemove() {
+      assertTrue(service.delete(1L));
    }
 
    public void testGetTemplatesByKeywordsAndPage() {
@@ -84,38 +86,38 @@ public class TemplateServiceTest extends TemplateTestBase {
       System.out.println(genericDAO.loadAll(Template.class).size());
       assertTrue(genericDAO.loadAll(Template.class).size()>=totalSize);
       List<TemplateDTO> page1Template = service.loadPublicTemplatesByKeywordsAndPage("", 0);
-      assertTrue(page1Template.size()==TemplateService.TEMPLATE_SIZE_PER_PAGE -1);
+      assertTrue(page1Template.size()==TemplateService.TEMPLATE_SIZE_PER_PAGE);
       
       List<TemplateDTO> templateWithKeywordsOne = service.loadPublicTemplatesByKeywordsAndPage("one", 0);
       assertTrue(templateWithKeywordsOne.size()==4);
       for (TemplateDTO dto : templateWithKeywordsOne) {
-         assertTrue(genericDAO.loadById(Template.class, dto.getId()).getKeywords().contains("one"));
+         assertTrue(genericDAO.loadById(Template.class, dto.getOid()).getKeywords().contains("one"));
       }
       
       List<TemplateDTO> templateWithKeywordsTwo = service.loadPublicTemplatesByKeywordsAndPage("two", 0);
       assertTrue(templateWithKeywordsTwo.size()==4);
       for (TemplateDTO dto : templateWithKeywordsTwo) {
-         assertTrue(genericDAO.loadById(Template.class, dto.getId()).getKeywords().contains("two"));
+         assertTrue(genericDAO.loadById(Template.class, dto.getOid()).getKeywords().contains("two"));
       }
       
       List<TemplateDTO> templateWithKeywordsOneTwo = service.loadPublicTemplatesByKeywordsAndPage("one,two", 0);
       assertTrue(templateWithKeywordsOneTwo.size()==3);
       for (TemplateDTO dto : templateWithKeywordsOneTwo) {
-         Template tplt = genericDAO.loadById(Template.class, dto.getId());
+         Template tplt = genericDAO.loadById(Template.class, dto.getOid());
          assertTrue(tplt.getKeywords().contains("one") && tplt.getKeywords().contains("two"));
       }
       
       List<TemplateDTO> templateWithKeywordsThreeFour = service.loadPublicTemplatesByKeywordsAndPage("three,four", 0);
       assertTrue(templateWithKeywordsThreeFour.size()==1);
       for (TemplateDTO dto : templateWithKeywordsThreeFour) {
-         Template tplt = genericDAO.loadById(Template.class, dto.getId());
+         Template tplt = genericDAO.loadById(Template.class, dto.getOid());
          assertTrue(tplt.getKeywords().contains("three") && tplt.getKeywords().contains("four"));
       }
       
       List<TemplateDTO> templateWithKeywordsFourThree = service.loadPublicTemplatesByKeywordsAndPage("four,three", 0);
       assertTrue(templateWithKeywordsFourThree.size()==1);
       for (TemplateDTO dto : templateWithKeywordsFourThree) {
-         Template tplt = genericDAO.loadById(Template.class, dto.getId());
+         Template tplt = genericDAO.loadById(Template.class, dto.getOid());
          assertTrue(tplt.getKeywords().contains("three") && tplt.getKeywords().contains("four"));
       }
    }

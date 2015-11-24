@@ -26,6 +26,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openremote.beehive.api.service.SyncHistoryService;
 import org.openremote.beehive.domain.SyncHistory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The Class SyncHistoryServiceImpl.
@@ -44,6 +45,7 @@ public class SyncHistoryServiceImpl extends BaseAbstractService<SyncHistory> imp
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public void save(SyncHistory syncHistory) {
       genericDAO.saveOrUpdate(syncHistory);
    }
@@ -51,6 +53,7 @@ public class SyncHistoryServiceImpl extends BaseAbstractService<SyncHistory> imp
    /**
     * {@inheritDoc}
     */
+   @Transactional
    public void update(String status, Date endTime) {
       SyncHistory dbSyncHistory = getLatest();
       dbSyncHistory.setStatus(status);

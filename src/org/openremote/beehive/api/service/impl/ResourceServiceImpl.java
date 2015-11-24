@@ -45,12 +45,15 @@ import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.service.AccountService;
 import org.openremote.beehive.api.service.ResourceService;
 import org.openremote.beehive.domain.User;
+import org.openremote.beehive.exception.FilePermissionException;
 import org.openremote.beehive.exception.InvalidPanelXMLException;
 import org.openremote.beehive.exception.NoSuchAccountException;
 import org.openremote.beehive.exception.NoSuchPanelException;
 import org.openremote.beehive.exception.PanelXMLNotFoundException;
+import org.openremote.beehive.utils.FileUtil;
 import org.openremote.beehive.utils.PathUtil;
 import org.openremote.beehive.utils.ZipUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -67,10 +70,11 @@ public class ResourceServiceImpl implements ResourceService {
    private AccountService accountService;
    
    protected Configuration configuration;
-   
+
    private static final String TABBAR_ELEMENT_NAME = "tabbar";
 
    @Override
+   @Transactional
    public boolean saveResource(long accountOid, InputStream input) {
       logger.debug("save resource from modeler to beehive");
 
@@ -139,6 +143,15 @@ public class ResourceServiceImpl implements ResourceService {
       }
       return dir;
    }
+
+   @Override
+   public File getUserFolder(long accountOid, String subfolder) {
+      File dir = new File(getDirByAccountOid(accountOid), subfolder);
+      if (!dir.exists()) {
+         dir.mkdirs();
+      }
+      return dir;
+   }
    
    private boolean makeSurePanelXMLExist(long accountOid) {
       File dir = makeSureDir(accountOid);
@@ -153,7 +166,6 @@ public class ResourceServiceImpl implements ResourceService {
       }
       return true;
    }
-
 
    @Override
    public String getPanelXMLByPanelNameFromAccount(String username, String panelName) {
@@ -359,10 +371,14 @@ public class ResourceServiceImpl implements ResourceService {
    }
    
    @Override
-   public File getResource(String username, String fileName) throws FileNotFoundException {
-      String filePath = PathUtil.addSlashSuffix(makeSureDir(accountService.queryAccountIdByUsername(username))
-            .getAbsolutePath()) + fileName;
-      File file = new File(filePath);
+   public File getResource(String username, String fileName) throws FileNotFoundException, FilePermissionException {
+      File resourcesDir = makeSureDir(accountService.queryAccountIdByUsername(username));
+      File file = new File(resourcesDir, fileName);
+      // first make sure we are not trying to read a parent folder using relative paths
+      // ex: /resources/id/../otherid/foo
+      if(!FileUtil.isParentOf(resourcesDir, file)){
+         throw new FilePermissionException();
+      }
       if (file.exists()) {
          return file;
       } else {
@@ -377,5 +393,4 @@ public class ResourceServiceImpl implements ResourceService {
    public void setAccountService(AccountService accountService) {
       this.accountService = accountService;
    }
-
 }

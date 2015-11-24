@@ -38,6 +38,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.util.GenericType;
@@ -59,6 +61,8 @@ import org.openremote.beehive.domain.Template;
 
 @Path("/account/{account_id}")
 public class TemplateRESTService extends RESTBaseService {
+
+  private static final Log logger = LogFactory.getLog(TemplateRESTService.class);
 
    /**
     * Get all templates by account id.
@@ -90,42 +94,6 @@ public class TemplateRESTService extends RESTBaseService {
       }
       return resourceNotFoundResponse();
    }
-   
-   /**
-    * Get all templates by account id.
-    * 
-    * @param accountId
-    *           account id
-    * @param shared
-    *           public or private
-    * @param credentials
-    *           HTTP basic header credentials : "Basic base64(username:md5(password,username))"
-    * 
-    * @return template list
-    */
-   @Path("templates/{shared}/keywords/{keywords}/page/{page}")
-   @GET
-   @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-   public Response getTemplatesByKeywordsAndPage(@PathParam("account_id") long accountId, @PathParam("shared") String shared,
-         @PathParam("keywords") String keywords, @PathParam("page") int page,
-         @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) {
-      
-      if (!authorize(accountId, credentials)) return unAuthorizedResponse();
-      String newKeywords = keywords;
-      if (keywords.equals(TemplateService.NO_KEYWORDS)) {
-         newKeywords = "";
-      }
-      List<TemplateDTO> list = null;
-      if ("public".equalsIgnoreCase(shared)) {
-         list = getTemplateService().loadPublicTemplatesByKeywordsAndPage(newKeywords, page);
-      } else if ("private".equalsIgnoreCase(shared)) {
-         list = getTemplateService().loadPrivateTemplatesByKeywordsAndPage(accountId, newKeywords, page);
-      }
-      if (list != null) {
-         return buildResponse(new TemplateListing(list));
-      }
-      return resourceNotFoundResponse();
-   }
 
    /**
     * Get template resources : template.zip (images included).
@@ -143,7 +111,10 @@ public class TemplateRESTService extends RESTBaseService {
          @PathParam("template_id") long templateId,
          @HeaderParam(Constant.HTTP_AUTH_HEADER_NAME) String credentials) {
       
+     logger.debug("getTemplateResources, accountId : " + accountId + ", templateId : " + templateId);
+     logger.debug("Provided credentials : " + credentials);
       if (!authorize(accountId, credentials)) return unAuthorizedResponse();
+      logger.debug("Authorization OK, getting resources");
       File templateZip = getTemplateService().getTemplateResourceZip(templateId);
       if (templateZip != null) {
          return buildResponse(templateZip);
@@ -185,7 +156,7 @@ public class TemplateRESTService extends RESTBaseService {
     * @param content
     *           template content (XML or JSON string)
     * @param credentials
-    *           HTTP basic header credentials : "Basic base64(username:password)"
+    *           HTTP basic header credentials : "Basic base64(username:md5(password,username))"
     * @return new template
     */
    @Path("template")
@@ -218,18 +189,6 @@ public class TemplateRESTService extends RESTBaseService {
 
    }
    
-   /**
-    * Update template properties to database.
-    * 
-    * @param accountId
-    * @param templateID
-    * @param name
-    * @param content
-    * @param keywords
-    * @param shared
-    * @param credentials HTTP basic header credentials : "Basic base64(username:password)".
-    * @return the updated template.
-    */
    @Path("template/{template_id}")
    @PUT
    @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -372,20 +331,11 @@ public class TemplateRESTService extends RESTBaseService {
    }
    
    
-   /**
-    * Retrieves instance of ResourceService from spring IOC
-    * 
-    * @return ResourceService instance
-    */
+   
    protected ResourceService getResourceService() {
       return (ResourceService) getSpringContextInstance().getBean("resourceService");
    }
    
-   /**
-    * Retrieves instance of TemplateService from spring IOC
-    * 
-    * @return TemplateService instance
-    */
    protected TemplateService getTemplateService() {
       return (TemplateService) getSpringContextInstance().getBean("templateService");
    }
