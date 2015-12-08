@@ -1,0 +1,4 @@
+Beehive-1
+=========
+
+ -  Temporarily accept hashed and non-hashed password for sync from controller 
