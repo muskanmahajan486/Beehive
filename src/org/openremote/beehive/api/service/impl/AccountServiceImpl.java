@@ -19,6 +19,7 @@
 */
 package org.openremote.beehive.api.service.impl;
 
+import org.apache.log4j.Logger;
 import org.openremote.beehive.Constant;
 import org.openremote.beehive.api.service.AccountService;
 import org.openremote.beehive.domain.Account;
@@ -35,6 +36,8 @@ import com.sun.syndication.io.impl.Base64;
  * @author Dan Cong
  */
 public class AccountServiceImpl extends BaseAbstractService<Code> implements AccountService {
+
+  private static Logger log = Logger.getLogger(AccountServiceImpl.class);
 
    @Override
    @Transactional
@@ -80,7 +83,11 @@ public class AccountServiceImpl extends BaseAbstractService<Code> implements Acc
 
    @Override
    public boolean isHTTPBasicAuthorized(long accountId, String credentials) {
-      return isHTTPBasicAuthorized(accountId, credentials, true);
+     if (isHTTPBasicAuthorized(accountId, credentials, true)) {
+       log.warn("Authorized account '" + accountId + "' using hashed credentials");
+       return true;
+     }
+     return isHTTPBasicAuthorized(accountId, credentials, false);
    }
 
    @Override
